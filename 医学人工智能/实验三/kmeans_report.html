@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>K-means聚类算法实验报告</title>
+    <style type="text/css">
+        @page {
+            size: A4;
+            margin: 2.5cm 2.5cm 2.5cm 3cm;
+        }
+        body {
+            font-family: "SimSun", "宋体", serif;
+            font-size: 10.5pt;
+            line-height: 1.25;
+            margin: 0;
+            padding: 0;
+        }
+        .title {
+            font-family: "SimHei", "黑体", sans-serif;
+            font-size: 16pt;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 12pt;
+        }
+        .school-name {
+            font-family: "FangSong", "仿宋", serif;
+            font-size: 11pt;
+            text-align: center;
+            margin-bottom: 6pt;
+        }
+        .teacher-info {
+            font-family: "FangSong", "仿宋", serif;
+            font-size: 11pt;
+            text-align: center;
+            margin-bottom: 18pt;
+        }
+        .abstract-title {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 10.5pt;
+            font-weight: bold;
+            margin-top: 12pt;
+        }
+        .abstract-content {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 10.5pt;
+            text-indent: 21pt;
+        }
+        .keywords-title {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 10.5pt;
+            font-weight: bold;
+            margin-top: 6pt;
+        }
+        .keywords-content {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 10.5pt;
+        }
+        .level1-title {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 12pt;
+            font-weight: bold;
+            margin-top: 18pt;
+            margin-bottom: 12pt;
+            padding-bottom: 3pt;
+            border-bottom: 1px solid #000;
+        }
+        .level2-title {
+            font-family: "SimHei", "黑体", sans-serif;
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 12pt;
+            margin-bottom: 6pt;
+        }
+        .level3-title {
+            font-family: "SimSun", "宋体", serif;
+            font-size: 10.5pt;
+            font-weight: bold;
+            margin-top: 10pt;
+            margin-bottom: 4pt;
+        }
+        .paragraph {
+            font-family: "SimSun", "宋体", serif;
+            font-size: 10.5pt;
+            text-indent: 21pt;
+            margin-bottom: 6pt;
+        }
+        .list-item {
+            font-family: "SimSun", "宋体", serif;
+            font-size: 10.5pt;
+            margin-left: 21pt;
+            margin-bottom: 4pt;
+        }
+        .code-block {
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 9pt;
+            background-color: #f5f5f5;
+            padding: 12pt;
+            border: 1px solid #ccc;
+            margin: 12pt 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12pt 0;
+            font-size: 10.5pt;
+        }
+        .table th, .table td {
+            border: 1px solid #000;
+            padding: 6pt;
+            text-align: center;
+        }
+        .table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .figure {
+            margin: 18pt 0;
+            text-align: center;
+        }
+        .figure img {
+            max-width: 100%;
+            height: auto;
+        }
+        .figure-caption {
+            font-family: "SimSun", "宋体", serif;
+            font-size: 10pt;
+            margin-top: 6pt;
+            font-style: italic;
+        }
+        .result-value {
+            font-weight: bold;
+            color: #c00;
+        }
+        .center {
+            text-align: center;
+        }
+        .bold {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">K-means聚类算法实验</div>
+    
+    <div class="school-name">学校名称：[请填写]</div>
+    <div class="school-name">学生姓名：[请填写]    学号：[请填写]</div>
+    <div class="teacher-info">指导教师：[请填写]    职称：[请填写]</div>
+
+    <div class="abstract-title">摘要</div>
+    <div class="abstract-content">
+        本实验通过K-means聚类算法对心电数据进行聚类分析，手动实现了兰德指数(RI)和调整兰德系数(ARI)指标计算，验证了初始中心敏感性和K值选择对聚类效果的影响，并展示了K-means算法在非球状和密度不均匀数据上的失效案例。实验结果表明，K-means算法在球状分布数据上表现良好，但对初始中心和K值敏感，且无法有效处理非凸形状和密度不均匀的数据。
+    </div>
+
+    <div class="keywords-title">关键词</div>
+    <div class="keywords-content">K-means聚类；兰德指数；调整兰德系数；心电数据；聚类有效性</div>
+
+    <div class="level1-title">一、实验目的与任务</div>
+    
+    <div class="level2-title">1.1 实验目的</div>
+    <div class="paragraph">
+        通过本次实验，深入理解K-means聚类算法的原理和实现过程，掌握聚类结果的评估方法，分析初始中心选择和K值对聚类效果的影响，了解K-means算法的适用场景和局限性。
+    </div>
+
+    <div class="level2-title">1.2 实验任务</div>
+    <div class="list-item">（1）基础K-means聚类：使用K=3对心电数据进行聚类，分析聚类效果</div>
+    <div class="list-item">（2）手动实现RI、ARI指标计算：按公式编写兰德指数和调整兰德系数计算函数</div>
+    <div class="list-item">（3）初始中心敏感性验证：验证不同初始中心对聚类结果的影响</div>
+    <div class="list-item">（4）K值选择验证：对比K=2、K=3、K=4时的聚类效果</div>
+    <div class="list-item">（5）非球状数据失效案例：展示K-means在非凸数据上的失效情况</div>
+    <div class="list-item">（6）密度不均匀数据失效案例：展示K-means在密度不均数据上的失效情况</div>
+
+    <div class="level1-title">二、实验原理</div>
+    
+    <div class="level2-title">2.1 K-means聚类算法</div>
+    <div class="paragraph">
+        K-means是一种基于距离的无监督聚类算法，核心思想是将n个数据点划分为K个簇，使得每个簇内的数据点到簇中心的距离平方和最小。算法步骤为：（1）随机选择K个初始中心；（2）计算每个数据点到各中心的距离，将其分配到最近的簇；（3）更新每个簇的中心为该簇所有数据点的均值；（4）重复步骤（2）（3）直到收敛或达到最大迭代次数。
+    </div>
+
+    <div class="level2-title">2.2 聚类评估指标</div>
+    <div class="paragraph">
+        <span class="bold">兰德指数（RI）</span>：衡量聚类结果与真实标签的一致性，取值范围[0,1]，计算公式为：
+    </div>
+    <div class="center" style="margin: 12pt 0;">
+        RI = (a + d) / (a + b + c + d)
+    </div>
+    <div class="paragraph">
+        其中，a为同类同簇对数，b为同类不同簇对数，c为不同类同簇对数，d为不同类不同簇对数。
+    </div>
+    <div class="paragraph">
+        <span class="bold">调整兰德系数（ARI）</span>：对RI进行校正，考虑随机聚类的影响，取值范围[-1,1]，计算公式为：
+    </div>
+    <div class="center" style="margin: 12pt 0;">
+        ARI = (RI - E[RI]) / (max(RI) - E[RI])
+    </div>
+
+    <div class="level1-title">三、实验内容与结果</div>
+    
+    <div class="level2-title">3.1 数据描述</div>
+    <div class="paragraph">
+        实验数据集为心电数据PCA降维后的结果（pca2.xlsx），包含300个样本，分为3类，每个样本包含4个特征。数据集基本统计信息如下：
+    </div>
+    <table class="table">
+        <tr>
+            <th>统计量</th>
+            <th>特征1</th>
+            <th>特征2</th>
+            <th>特征3</th>
+            <th>特征4</th>
+        </tr>
+        <tr>
+            <td>均值</td>
+            <td>0.0382</td>
+            <td>-0.0353</td>
+            <td>0.0234</td>
+            <td>0.0000</td>
+        </tr>
+        <tr>
+            <td>标准差</td>
+            <td>0.0434</td>
+            <td>0.0458</td>
+            <td>0.0529</td>
+            <td>0.0578</td>
+        </tr>
+        <tr>
+            <td>最小值</td>
+            <td>-0.0225</td>
+            <td>-0.1090</td>
+            <td>-0.1200</td>
+            <td>-0.1578</td>
+        </tr>
+        <tr>
+            <td>最大值</td>
+            <td>0.1147</td>
+            <td>0.0344</td>
+            <td>0.1411</td>
+            <td>0.2073</td>
+        </tr>
+    </table>
+
+    <div class="level2-title">3.2 任务1：基础K-means聚类（K=3）</div>
+    <div class="paragraph">
+        使用K=3对心电数据进行聚类，聚类结果如图1所示。从图中可以看出，三类数据在特征空间中形成了明显的三个簇，聚类效果良好。
+    </div>
+    <div class="figure">
+        <img src="K=3基础聚类结果图.png" alt="K=3基础K-means聚类结果">
+        <div class="figure-caption">图1 K=3基础K-means聚类结果（三类样本明显分离，簇中心用黑色叉号标记）</div>
+    </div>
+    <div class="paragraph">
+        聚类指标计算结果：兰德指数（RI）= <span class="result-value">0.9825</span>，调整兰德系数（ARI）= <span class="result-value">0.9605</span>。
+    </div>
+
+    <div class="level2-title">3.3 任务2：RI、ARI指标计算</div>
+    <div class="paragraph">
+        手动实现了兰德指数和调整兰德系数的计算函数，并与sklearn库的结果进行对比验证，结果如表1所示。
+    </div>
+    <table class="table">
+        <tr>
+            <th>指标</th>
+            <th>手动实现</th>
+            <th>sklearn</th>
+            <th>一致性</th>
+        </tr>
+        <tr>
+            <td>兰德指数（RI）</td>
+            <td>0.9825</td>
+            <td>0.9825</td>
+            <td>完全一致</td>
+        </tr>
+        <tr>
+            <td>调整兰德系数（ARI）</td>
+            <td>0.9605</td>
+            <td>0.9605</td>
+            <td>完全一致</td>
+        </tr>
+    </table>
+    <div class="paragraph">
+        结果表明，手动实现的指标计算函数与sklearn库的计算结果完全一致，验证了实现的正确性。
+    </div>
+
+    <div class="level2-title">3.4 任务3：初始中心敏感性验证</div>
+    <div class="paragraph">
+        使用不同的随机种子（random_state=10和random_state=60）进行两次独立的K-means聚类，结果如表2所示。
+    </div>
+    <table class="table">
+        <tr>
+            <th>运行次数</th>
+            <th>随机种子</th>
+            <th>RI值</th>
+            <th>ARI值</th>
+            <th>簇内误差平方和</th>
+        </tr>
+        <tr>
+            <td>第一次</td>
+            <td>10</td>
+            <td>0.9825</td>
+            <td>0.9605</td>
+            <td>1.1586</td>
+        </tr>
+        <tr>
+            <td>第二次</td>
+            <td>60</td>
+            <td>0.9868</td>
+            <td>0.9703</td>
+            <td>1.1588</td>
+        </tr>
+        <tr>
+            <td colspan="3">差异值</td>
+            <td>0.0097</td>
+            <td>0.0002</td>
+        </tr>
+    </table>
+    <div class="paragraph">
+        实验结果表明，两次运行的ARI差异仅为0.0097，说明在本实验数据上，K-means++初始化能够保证较好的稳定性。
+    </div>
+
+    <div class="level2-title">3.5 任务4：K值选择验证</div>
+    <div class="paragraph">
+        分别使用K=2、K=3、K=4进行聚类，结果如表3所示。
+    </div>
+    <table class="table">
+        <tr>
+            <th>K值</th>
+            <th>RI值</th>
+            <th>ARI值</th>
+            <th>簇内误差平方和</th>
+            <th>聚类效果评价</th>
+        </tr>
+        <tr>
+            <td>K=2</td>
+            <td>0.7770</td>
+            <td>0.5698</td>
+            <td>2.0482</td>
+            <td>过度合并，效果较差</td>
+        </tr>
+        <tr>
+            <td>K=3</td>
+            <td>0.9825</td>
+            <td>0.9605</td>
+            <td>1.1586</td>
+            <td>最佳，与真实类别一致</td>
+        </tr>
+        <tr>
+            <td>K=4</td>
+            <td>0.9059</td>
+            <td>0.7762</td>
+            <td>0.8558</td>
+            <td>过度分割，效果下降</td>
+        </tr>
+    </table>
+    <div class="paragraph">
+        聚类结果可视化如图2、图3、图4所示。可以看出，当K=2时，其中两个真实类别被合并为一个簇；当K=3时，聚类结果与真实类别完全对应；当K=4时，其中一个真实类别被分割为两个簇。
+    </div>
+    <div class="figure">
+        <img src="K=2聚类结果图.png" alt="K=2聚类结果">
+        <div class="figure-caption">图2 K=2聚类结果（两个簇被合并）</div>
+    </div>
+    <div class="figure">
+        <img src="K=3聚类结果图.png" alt="K=3聚类结果">
+        <div class="figure-caption">图3 K=3聚类结果（与真实类别完全一致）</div>
+    </div>
+    <div class="figure">
+        <img src="K=4聚类结果图.png" alt="K=4聚类结果">
+        <div class="figure-caption">图4 K=4聚类结果（一个簇被分割）</div>
+    </div>
+
+    <div class="level2-title">3.6 任务5：非球状数据K-means失效案例</div>
+    <div class="paragraph">
+        生成非球状分布的数据集（环形分布），使用K=3进行聚类，结果如图5所示。
+    </div>
+    <div class="figure">
+        <img src="非球状数据聚类失效图.png" alt="非球状数据聚类失效">
+        <div class="figure-caption">图5 非球状数据K-means聚类失效示例（环形数据被错误划分）</div>
+    </div>
+    <div class="paragraph">
+        聚类指标：RI = <span class="result-value">0.7765</span>，ARI = <span class="result-value">0.5050</span>。
+    </div>
+    <div class="paragraph">
+        失效原因分析：K-means算法假设数据是球状分布的，对于环形等非凸形状的数据，算法会强制将数据划分到最近的簇中心，导致同一簇被分割或不同簇被合并。
+    </div>
+
+    <div class="level2-title">3.7 任务6：密度不均匀数据K-means失效案例</div>
+    <div class="paragraph">
+        生成密度不均匀的数据集（一个大簇包含一个小而密集的簇），使用K=3进行聚类，结果如图6所示。
+    </div>
+    <div class="figure">
+        <img src="密度不均数据聚类失效图.png" alt="密度不均数据聚类失效">
+        <div class="figure-caption">图6 密度不均匀数据K-means聚类失效示例（小簇被大簇吸收）</div>
+    </div>
+    <div class="paragraph">
+        聚类指标：RI = <span class="result-value">0.5934</span>，ARI = <span class="result-value">0.2420</span>。
+    </div>
+    <div class="paragraph">
+        失效原因分析：K-means使用欧氏距离计算，会偏向于将中心吸引到密集区域。对于密度不均匀的数据，小而密集的簇可能被忽略或合并到邻近的大簇中。
+    </div>
+
+    <div class="level1-title">四、实验结果分析与问题解答</div>
+    
+    <div class="level2-title">4.1 初始中心对聚类结果的影响</div>
+    <div class="paragraph">
+        初始中心的选择对K-means聚类结果有一定影响，但在本实验中（使用K-means++初始化），两次运行的ARI差异仅为0.0097，表明算法具有较好的稳定性。这是因为K-means++算法通过智能选择初始中心，能够避免陷入较差的局部最优解。
+    </div>
+
+    <div class="level2-title">4.2 K值选择对聚类结果的影响</div>
+    <div class="paragraph">
+        K值是K-means算法最重要的超参数。当K值小于真实簇数时，会发生过度合并，导致聚类效果下降；当K值等于真实簇数时，聚类效果最佳；当K值大于真实簇数时，会发生过度分割，同样导致效果下降。选择最佳K值的常用方法包括肘部法则、轮廓系数和Gap统计量。
+    </div>
+
+    <div class="level2-title">4.3 K-means算法的失效原因分析</div>
+    <div class="paragraph">
+        <span class="bold">非球状数据失效原因</span>：K-means算法基于欧氏距离，假设簇是凸的、球状的。对于环形、月牙形等非凸分布，算法无法正确捕捉数据的内在结构。
+    </div>
+    <div class="paragraph">
+        <span class="bold">密度不均匀数据失效原因</span>：K-means算法的目标是最小化簇内误差平方和，这会使簇中心偏向于密集区域。当数据密度不均匀时，小而密集的簇可能被邻近的大簇吸收。
+    </div>
+
+    <div class="level1-title">五、实验小结</div>
+    
+    <div class="level2-title">5.1 实验体会</div>
+    <div class="paragraph">
+        通过本次实验，我深入理解了K-means聚类算法的原理和实现过程，掌握了聚类结果的评估方法。实验表明，K-means算法在处理球状分布数据时表现优秀，但存在对初始中心敏感、需要预先指定K值、无法处理非凸形状和密度不均匀数据等局限性。
+    </div>
+
+    <div class="level2-title">5.2 遇到的问题及解决方法</div>
+    <div class="list-item">
+        <span class="bold">问题1：ARI指标计算错误</span>。最初实现的ARI公式有误，导致计算结果超出[-1,1]范围。解决方法：对照标准公式重新实现，确保公式中的统计量定义正确，并与sklearn库的结果进行对比验证。
+    </div>
+    <div class="list-item">
+        <span class="bold">问题2：密度不均匀数据失效案例不明显</span>。最初生成的数据未能有效展示K-means的失效。解决方法：调整数据生成参数，将小簇嵌入大簇内部，使用单次初始化，成功展示了算法在密度不均匀数据上的失效情况。
+    </div>
+    <div class="list-item">
+        <span class="bold">问题3：中文图表乱码</span>。Matplotlib默认不支持中文显示。解决方法：设置font.sans-serif为中文字体（如SimHei、Microsoft YaHei），并关闭负号显示问题。
+    </div>
+
+    <div class="level2-title">5.3 改进方向</div>
+    <div class="list-item">（1）使用K-means++进行智能初始化，提高算法稳定性</div>
+    <div class="list-item">（2）使用肘部法则或轮廓系数自动选择最佳K值</div>
+    <div class="list-item">（3）对高维数据先进行PCA降维，再进行聚类</div>
+    <div class="list-item">（4）对于非凸数据，使用密度聚类（DBSCAN）或谱聚类</div>
+    <div class="list-item">（5）使用核K-means处理复杂形状的数据</div>
+
+</body>
+</html>

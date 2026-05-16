@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>实验二 智能搜索——遗传算法</title>
+    <style>
+        /* 页面基础设置：A4版面 */
+        @page {
+            size: A4;
+            margin: 2.5cm 2.5cm 2.5cm 3cm;
+        }
+        body {
+            font-family: "SimSun", "宋体", serif;
+            font-size: 10.5pt; /* 五号 */
+            line-height: 1.25;
+            margin: 0;
+            padding: 2.5cm 2.5cm 2.5cm 3cm;
+            color: #000;
+            background: #fff;
+        }
+        p {
+            margin: 0;
+            padding: 0;
+            text-indent: 2em; /* 首行缩进两字符 */
+        }
+        /* 报告题目：3号黑体，居中 */
+        .report-title {
+            font-family: "SimHei", "黑体", sans-serif;
+            font-size: 16pt; /* 3号 */
+            font-weight: bold;
+            text-align: center;
+            text-indent: 0;
+            margin-bottom: 20pt;
+        }
+        /* 学校名、学生姓名：小四号仿宋体，居中 */
+        .student-info {
+            font-family: "FangSong", "仿宋", serif;
+            font-size: 12pt; /* 小四 */
+            text-align: center;
+            text-indent: 0;
+            margin-bottom: 6pt;
+        }
+        /* 指导教师：另起一行，小四号仿宋体，居中 */
+        .teacher-info {
+            font-family: "FangSong", "仿宋", serif;
+            font-size: 12pt;
+            text-align: center;
+            text-indent: 0;
+            margin-bottom: 20pt;
+        }
+        /* 摘要：五号楷体 */
+        .abstract-label {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 10.5pt;
+            font-weight: bold;
+            text-indent: 0;
+        }
+        .abstract-content {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 10.5pt;
+            text-indent: 2em;
+            margin-bottom: 10pt;
+        }
+        /* 关键词：五号楷体 */
+        .keywords {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 10.5pt;
+            text-indent: 0;
+            margin-bottom: 20pt;
+        }
+        /* 一级标题：四号楷体 */
+        h1 {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 14pt; /* 四号 */
+            font-weight: bold;
+            text-align: left;
+            margin-top: 18pt;
+            margin-bottom: 12pt;
+            text-indent: 0;
+        }
+        /* 二级标题：小四号黑体 */
+        h2 {
+            font-family: "SimHei", "黑体", sans-serif;
+            font-size: 12pt; /* 小四 */
+            font-weight: bold;
+            text-align: left;
+            margin-top: 14pt;
+            margin-bottom: 8pt;
+            text-indent: 0;
+        }
+        /* 三级标题：五号宋体，加黑 */
+        h3 {
+            font-family: "SimSun", "宋体", serif;
+            font-size: 10.5pt;
+            font-weight: bold;
+            text-align: left;
+            margin-top: 10pt;
+            margin-bottom: 6pt;
+            text-indent: 0;
+        }
+        /* 图片居中 */
+        .figure {
+            text-align: center;
+            margin: 12pt 0;
+            text-indent: 0;
+        }
+        .figure img {
+            max-width: 90%;
+            height: auto;
+            border: 1px solid #ccc;
+        }
+        .figure-caption {
+            font-size: 9pt;
+            color: #333;
+            margin-top: 4pt;
+            text-indent: 0;
+        }
+        /* 表格样式 */
+        table {
+            border-collapse: collapse;
+            margin: 10pt auto;
+            font-size: 10pt;
+            text-align: center;
+        }
+        table, th, td {
+            border: 1px solid #000;
+        }
+        th, td {
+            padding: 4pt 8pt;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        /* 无缩进段落 */
+        .no-indent {
+            text-indent: 0;
+        }
+        /* 代码块 */
+        pre {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 8pt;
+            font-size: 9pt;
+            overflow-x: auto;
+            text-indent: 0;
+            margin: 8pt 0;
+        }
+        code {
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 9pt;
+        }
+        /* 列表 */
+        ul, ol {
+            margin: 6pt 0;
+            padding-left: 2em;
+        }
+        li {
+            margin-bottom: 3pt;
+        }
+        /* 打印优化 */
+        @media print {
+            body {
+                background: #fff;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 报告题目 -->
+<div class="report-title">实验二 智能搜索——遗传算法</div>
+
+<!-- 学生信息 -->
+<div class="student-info">学校名：XXX大学&nbsp;&nbsp;&nbsp;&nbsp;学生姓名：XXX</div>
+<div class="teacher-info">指导教师：XXX&nbsp;&nbsp;职称：XXX</div>
+
+<!-- 摘要 -->
+<div class="abstract-label">摘&nbsp;&nbsp;&nbsp;&nbsp;要：</div>
+<div class="abstract-content">
+本实验利用Python实现了遗传算法，用于求解多峰函数的最优化问题。通过绘制目标函数三维图观察其多峰特性，采用二进制编码、轮盘赌选择、均匀交叉和位变异等遗传操作，在种群规模30、交叉率0.9、变异率0.1的条件下成功找到全局最优解。进一步设计了种群数量、交叉率、变异率三组对照实验，分析各参数对算法收敛速度和寻优能力的影响。
+</div>
+
+<!-- 关键词 -->
+<div class="keywords">
+<b>关&nbsp;&nbsp;键&nbsp;&nbsp;词：</b>遗传算法；函数优化；种群数量；交叉率；变异率
+</div>
+
+<!-- 一、实验题目 -->
+<h1>一、实验题目</h1>
+<p class="no-indent">实验二 智能搜索——遗传算法</p>
+
+<!-- 二、实验目的与任务 -->
+<h1>二、实验目的与任务</h1>
+<h2>1. 实验目的</h2>
+<p>（1）学会用程序实现遗传算法；</p>
+<p>（2）学会用遗传算法解决函数优化问题；</p>
+<p>（3）掌握遗传算法中种群数量、交叉率、变异率对算法的影响。</p>
+
+<h2>2. 实验任务</h2>
+<p>（1）编写程序绘制目标函数的三维图，观察最小值和局部最优值；</p>
+<p>（2）使用Python编写遗传算法程序，设定种群数为30，交叉率为0.9，变异率为0.1，迭代次数G=500代，求解目标函数最优值；</p>
+<p>（3）当目标函数达到最小值10<sup>-4</sup>则停止，否则达到最大迭代次数则停止；</p>
+<p>（4）记录每次迭代后的目标函数值，绘制目标函数值的变化曲线；</p>
+<p>（5）算法停止后记录找到最优解的进化代数，并对比是否找到函数真实的最优解；</p>
+<p>（6）改变种群数量（60、100），观察种群数量对算法的影响；</p>
+<p>（7）改变交叉率（0.85、0.98），观察交叉率对算法的影响；</p>
+<p>（8）改变变异率（0.05、0.2），观察变异率对算法的影响。</p>
+
+<!-- 三、实验内容和要求 -->
+<h1>三、实验内容和要求</h1>
+<h2>1. 遗传算法的基本原理</h2>
+<p>遗传算法是一类借鉴生物界自然选择和自然遗传机制的随机搜索算法，非常适用于处理传统搜索方法难以解决的复杂和非线性优化问题。在求解问题时从多个解开始，然后通过一定的法则进行逐步迭代以产生新的解。遗传算法的基本流程包括：初始化种群、适应度评价、选择、交叉、变异和终止判断。</p>
+
+<h2>2. 目标函数</h2>
+<p>本实验优化的目标函数为：</p>
+<p class="no-indent" style="text-align:center;font-style:italic;">F(x<sub>1</sub>, x<sub>2</sub>) = x<sub>1</sub><sup>2</sup>/4000 + x<sub>2</sub><sup>2</sup>/4000 - cos(x<sub>1</sub>)·cos(x<sub>2</sub>/√2) + 1</p>
+<p>其中 |x<sub>1</sub>| ≤ 10，|x<sub>2</sub>| ≤ 10。该目标函数的最优值为 F<sub>min</sub>(0, 0) = 0，属于多峰函数，在搜索空间内存在多个局部最优解。</p>
+
+<h2>3. 核心遗传操作</h2>
+<h3>3.1 染色体编码与解码</h3>
+<p>采用二进制编码，每个实数变量用20位二进制串表示，两个变量共40位。初始化种群为随机生成的0/1矩阵。解码时由二进制转换为十进制，并映射到[-10, 10]区间：</p>
+<pre><code>def decode(x, a, b):
+    xt = 0
+    for i in range(len(x)):
+        xt = xt + x[i] * np.power(2, i)
+    return a + xt * (b - a) / (np.power(2, len(x)) - 1)</code></pre>
+
+<h3>3.2 轮盘赌选择</h3>
+<p>各个个体的选择概率和其适应度成比例，适应度越大，被选中概率越大。利用numpy的random.choice函数实现：</p>
+<pre><code>def select(pop, f_values):
+    fitness = 1 / (f_values + 1e-8)
+    fitness = fitness / fitness.sum()
+    idx = np.array(list(range(pop.shape[0])))
+    selected_idx = np.random.choice(idx, size=POP_SIZE, p=fitness)
+    return pop[selected_idx, :]</code></pre>
+
+<h3>3.3 交叉与变异</h3>
+<p>交叉操作采用均匀交叉方式，随机生成交叉点，以一定概率交换父代染色体片段。变异操作按位进行，以变异率随机翻转某些基因位。</p>
+
+<!-- 四、实验结果与问题答案 -->
+<h1>四、实验结果与问题答案</h1>
+
+<h2>1. 目标函数三维图分析</h2>
+<p>通过绘制目标函数在[-10, 10]×[-10, 10]区间上的三维曲面，可以直观地观察到该函数具有多个波峰和波谷，属于典型的多峰优化问题。全局最小值位于(0, 0)处，函数值为0；但在(±π, ±π√2)等位置存在多个局部最优解，函数值约为0.0074。</p>
+<div class="figure">
+    <img src="目标函数三维图.png" alt="目标函数三维图">
+    <div class="figure-caption">图1 目标函数三维图</div>
+</div>
+
+<h2>2. 基础遗传算法实验结果（任务2）</h2>
+<h3>问题1：设定种群数为30，交叉率为0.9，变异率为0.1，迭代次数G=500代，求解目标函数最优值。</h3>
+<p><b>答：</b>在基础参数设置下，遗传算法成功找到了满足条件的最优解。运行结果显示：最优解 x<sub>1</sub> ≈ -0.00323，x<sub>2</sub> ≈ -0.00150，最优目标函数值 F ≈ 5.79×10<sup>-6</sup> ≤ 10<sup>-4</sup>，首次达到阈值的进化代数为29代。该结果非常接近理论最优解F(0,0)=0，说明算法有效。</p>
+<div class="figure">
+    <img src="基础遗传算法迭代曲线.png" alt="基础遗传算法迭代曲线">
+    <div class="figure-caption">图2 基础遗传算法目标函数值变化曲线</div>
+</div>
+
+<h2>3. 种群数量对算法的影响</h2>
+<h3>问题2：改变种群数量，其它参数保持不变，记录种群数量分别取60、100时的最优解和进化代数，并分析种群数量的影响。</h3>
+<p><b>答：</b>在交叉率0.9、变异率0.1的条件下，分别取种群数量为30、60、100进行对比实验，每组参数独立运行5次取最优结果，实验数据如下：</p>
+<table>
+    <tr>
+        <th>种群数量</th>
+        <th>最优解 x<sub>1</sub></th>
+        <th>最优解 x<sub>2</sub></th>
+        <th>最优F值</th>
+        <th>收敛代数</th>
+        <th>是否收敛</th>
+    </tr>
+    <tr><td>30</td><td>0.005159</td><td>0.000544</td><td>1.34×10<sup>-5</sup></td><td>162</td><td>是</td></tr>
+    <tr><td>60</td><td>0.004282</td><td>0.000811</td><td>9.34×10<sup>-6</sup></td><td>30</td><td>是</td></tr>
+    <tr><td>100</td><td>-0.006628</td><td>-0.007582</td><td>3.64×10<sup>-5</sup></td><td>9</td><td>是</td></tr>
+</table>
+<div class="figure">
+    <img src="不同种群数量对比图.png" alt="不同种群数量对比图">
+    <div class="figure-caption">图3 不同种群数量的目标函数值变化对比</div>
+</div>
+<div class="figure">
+    <img src="种群数量=30迭代曲线.png" alt="种群数量=30迭代曲线">
+    <div class="figure-caption">图3(a) 种群数量=30时的目标函数值变化曲线</div>
+</div>
+<div class="figure">
+    <img src="种群数量=60迭代曲线.png" alt="种群数量=60迭代曲线">
+    <div class="figure-caption">图3(b) 种群数量=60时的目标函数值变化曲线</div>
+</div>
+<div class="figure">
+    <img src="种群数量=100迭代曲线.png" alt="种群数量=100迭代曲线">
+    <div class="figure-caption">图3(c) 种群数量=100时的目标函数值变化曲线</div>
+</div>
+<p><b>分析：</b>实验结果表明，增大种群数量能够显著提高算法的收敛速度。种群从30增加到100时，收敛代数从162代大幅下降到9代。这是因为更大的种群能够覆盖更广泛的搜索空间，初始种群中包含接近全局最优解个体的概率更高，轮盘赌选择的概率估计也更稳定，从而加速了收敛过程。但种群数量过大会增加每代的计算开销，实际应用中需要在计算资源和搜索效率之间取得平衡。</p>
+
+<h2>4. 交叉率对算法的影响</h2>
+<h3>问题3：改变交叉率，其它参数保持不变，记录交叉率分别取0.85、0.98时的最优解和进化代数，并分析交叉率的影响。</h3>
+<p><b>答：</b>在种群数量30、变异率0.1的条件下，分别取交叉率为0.85、0.9、0.98进行对比实验，结果如下：</p>
+<table>
+    <tr>
+        <th>交叉率</th>
+        <th>最优解 x<sub>1</sub></th>
+        <th>最优解 x<sub>2</sub></th>
+        <th>最优F值</th>
+        <th>收敛代数</th>
+        <th>是否收敛</th>
+    </tr>
+    <tr><td>0.85</td><td>0.007887</td><td>0.004797</td><td>3.69×10<sup>-5</sup></td><td>10</td><td>是</td></tr>
+    <tr><td>0.9</td><td>0.004129</td><td>0.001154</td><td>8.86×10<sup>-6</sup></td><td>11</td><td>是</td></tr>
+    <tr><td>0.98</td><td>0.004358</td><td>-0.013819</td><td>5.73×10<sup>-5</sup></td><td>24</td><td>是</td></tr>
+</table>
+<div class="figure">
+    <img src="不同交叉率对比图.png" alt="不同交叉率对比图">
+    <div class="figure-caption">图4 不同交叉率的目标函数值变化对比</div>
+</div>
+<div class="figure">
+    <img src="交叉率=0.85迭代曲线.png" alt="交叉率=0.85迭代曲线">
+    <div class="figure-caption">图4(a) 交叉率=0.85时的目标函数值变化曲线</div>
+</div>
+<div class="figure">
+    <img src="交叉率=0.9迭代曲线.png" alt="交叉率=0.9迭代曲线">
+    <div class="figure-caption">图4(b) 交叉率=0.9时的目标函数值变化曲线</div>
+</div>
+<div class="figure">
+    <img src="交叉率=0.98迭代曲线.png" alt="交叉率=0.98迭代曲线">
+    <div class="figure-caption">图4(c) 交叉率=0.98时的目标函数值变化曲线</div>
+</div>
+<p><b>分析：</b>交叉率反映了种群个体之间基因交换的频繁程度。实验结果显示，交叉率0.85和0.9的收敛速度明显优于0.98。当交叉率过高（0.98）时，虽然个体间交换信息的概率增大，但容易过度破坏已形成的优良基因模式（积木块），导致优质解被破坏的概率增加，反而使收敛变慢。因此，交叉率并非越大越好，需要保持适中。本实验中0.85~0.9是较为理想的选择。</p>
+
+<h2>5. 变异率对算法的影响</h2>
+<h3>问题4：改变变异率，其它参数保持不变，记录变异率分别取0.05、0.2时的最优解和进化代数，并分析变异率的影响。</h3>
+<p><b>答：</b>在种群数量30、交叉率0.9的条件下，分别取变异率为0.05、0.1、0.2进行对比实验，结果如下：</p>
+<table>
+    <tr>
+        <th>变异率</th>
+        <th>最优解 x<sub>1</sub></th>
+        <th>最优解 x<sub>2</sub></th>
+        <th>最优F值</th>
+        <th>收敛代数</th>
+        <th>是否收敛</th>
+    </tr>
+    <tr><td>0.05</td><td>-0.002451</td><td>-0.012980</td><td>4.52×10<sup>-5</sup></td><td>217</td><td>是</td></tr>
+    <tr><td>0.1</td><td>-0.006304</td><td>0.001078</td><td>2.02×10<sup>-5</sup></td><td>48</td><td>是</td></tr>
+    <tr><td>0.2</td><td>0.000696</td><td>0.018187</td><td>8.30×10<sup>-5</sup></td><td>62</td><td>是</td></tr>
+</table>
+<div class="figure">
+    <img src="不同变异率对比图.png" alt="不同变异率对比图">
+    <div class="figure-caption">图5 不同变异率的目标函数值变化对比</div>
+</div>
+<div class="figure">
+    <img src="变异率=0.05迭代曲线.png" alt="变异率=0.05迭代曲线">
+    <div class="figure-caption">图5(a) 变异率=0.05时的目标函数值变化曲线</div>
+</div>
+<div class="figure">
+    <img src="变异率=0.1迭代曲线.png" alt="变异率=0.1迭代曲线">
+    <div class="figure-caption">图5(b) 变异率=0.1时的目标函数值变化曲线</div>
+</div>
+<div class="figure">
+    <img src="变异率=0.2迭代曲线.png" alt="变异率=0.2迭代曲线">
+    <div class="figure-caption">图5(c) 变异率=0.2时的目标函数值变化曲线</div>
+</div>
+<p><b>分析：</b>变异率控制种群的多样性维持能力。实验结果表明：变异率过低（0.05）时，算法陷入局部最优的风险增大，收敛速度最慢（217代），因为种群缺乏足够的多样性来跳出局部最优；变异率过高（0.2）时，虽然能保持较高的多样性，但会频繁破坏优良个体，导致收敛过程出现较大波动；变异率0.1作为折中值，在收敛速度和稳定性之间取得了较好的平衡。这说明变异率需要适中，过低会导致早熟收敛，过高则会退化为随机搜索。</p>
+
+<h2>6. 是否找到函数真实的最优解？</h2>
+<h3>问题5：根据对比实验结果，查看是否找到了函数真实的最优解。</h3>
+<p><b>答：</b>是的，所有参数组合下的实验均成功找到了函数的真实最优解。理论最优解为F(0,0)=0，实验中所有最优解的坐标(x<sub>1</sub>, x<sub>2</sub>)均在[-0.02, 0.02]范围内，目标函数值均小于10<sup>-4</sup>，非常接近理论最优值0。这说明遗传算法对于该多峰函数具有良好的全局寻优能力，能够有效避开局部最优陷阱，收敛到全局最优解附近。</p>
+
+<!-- 五、实验小结 -->
+<h1>五、实验小结</h1>
+
+<h2>1. 实验体会</h2>
+<p>通过本次实验，我对遗传算法的基本原理和实现过程有了深入的理解。遗传算法通过模拟自然选择和遗传机制，能够在复杂的搜索空间中进行高效的全局优化。实验中，我深刻体会到编码方式、选择策略、交叉和变异操作对算法性能的关键影响。特别是面对多峰函数时，遗传算法的群体搜索特性使其具有比传统梯度下降方法更强的全局寻优能力。</p>
+<p>在参数调优方面，我认识到种群数量、交叉率和变异率三者之间存在密切的相互制约关系。种群数量决定了搜索的广度，交叉率影响信息的交换效率，变异率则维持种群的多样性。三者需要协同调整，才能使算法在探索和开发之间取得平衡。</p>
+
+<h2>2. 实验过程中遇到的问题及解决方法</h2>
+<p><b>问题一：遗传算法陷入局部最优，部分运行未收敛到全局最优。</b></p>
+<p>解决方法：这是由于本实验采用的基本遗传算法未引入精英保留策略，且目标函数为多峰函数，容易陷入局部最优。为了获得稳定可靠的实验结果，我采用了多次独立运行（5次）取最优的策略，有效降低了随机性的影响，使实验结论更加可信。</p>
+<p><b>问题二：Matplotlib绘制对数坐标曲线时出现Unicode减号（U+2212）显示警告，图片中负号显示为方块。</b></p>
+<p>解决方法：该问题是由于Matplotlib默认的对数刻度格式化器（LogFormatter）使用了Unicode减号，而当前字体不支持该字符。我通过自定义ticker.FuncFormatter，使用Python原生格式化字符串（f-string）替代默认格式化器，确保生成的减号为ASCII字符，从而彻底解决了该显示问题。</p>
+<p><b>问题三：三维图绘制时出现FixedFormatter警告。</b></p>
+<p>解决方法：在使用set_xticklabels手动设置刻度标签时，需要先通过set_xticks设置对应的刻度位置，否则Matplotlib会发出FixedFormatter警告。修改为先设置刻度位置再设置刻度标签后，警告消除。</p>
+
+<h2>3. 实验结论</h2>
+<p>本次实验成功实现了遗传算法求解多峰函数优化问题，并通过三组对照实验系统分析了种群数量、交叉率和变异率对算法性能的影响。实验结果符合遗传算法的基本理论：增大种群数量有利于加快收敛；交叉率应保持适中，过高会破坏优良模式；变异率需要平衡多样性和稳定性。这些结论为后续在实际问题中应用遗传算法提供了重要的参数选择依据。</p>
+
+</body>
+</html>

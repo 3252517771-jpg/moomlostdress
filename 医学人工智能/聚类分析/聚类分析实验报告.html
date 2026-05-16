@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聚类分析实验报告</title>
+    <style>
+        /* 页面设置 - A4纸 */
+        @page {
+            size: A4;
+            margin-top: 2.5cm;
+            margin-bottom: 2.5cm;
+            margin-left: 3cm;
+            margin-right: 2.5cm;
+        }
+        
+        body {
+            font-family: "宋体", SimSun, serif;
+            font-size: 10.5pt; /* 五号 */
+            line-height: 1.25;
+            margin: 0;
+            padding: 0;
+            width: 210mm;
+            margin: 0 auto;
+            background: white;
+            color: black;
+        }
+        
+        /* 报告标题 - 3号黑体，居中 */
+        .report-title {
+            font-family: "黑体", SimHei, sans-serif;
+            font-size: 16pt; /* 3号 */
+            text-align: center;
+            font-weight: bold;
+            margin-top: 2cm;
+            margin-bottom: 1cm;
+        }
+        
+        /* 学校名、学生姓名 - 小四号仿宋体，居中 */
+        .student-info {
+            font-family: "仿宋", FangSong, serif;
+            font-size: 12pt; /* 小四号 */
+            text-align: center;
+            margin-bottom: 0.3cm;
+        }
+        
+        /* 指导教师 - 另起一行，小四号仿宋体，居中 */
+        .teacher-info {
+            font-family: "仿宋", FangSong, serif;
+            font-size: 12pt; /* 小四号 */
+            text-align: center;
+            margin-bottom: 2cm;
+        }
+        
+        /* 摘要 - 五号楷体，不超过120字 */
+        .abstract-section {
+            font-family: "楷体", KaiTi, serif;
+            font-size: 10.5pt; /* 五号 */
+            text-indent: 2em;
+            margin-bottom: 0.5cm;
+            text-align: justify;
+        }
+        
+        .abstract-label {
+            font-weight: bold;
+        }
+        
+        /* 关键词 - 3-5个，分号隔开，五号楷体 */
+        .keywords-section {
+            font-family: "楷体", KaiTi, serif;
+            font-size: 10.5pt; /* 五号 */
+            text-indent: 2em;
+            margin-bottom: 1.5cm;
+        }
+        
+        .keywords-label {
+            font-weight: bold;
+        }
+        
+        /* 一级标题 - 四号楷体 */
+        h1 {
+            font-family: "楷体", KaiTi, serif;
+            font-size: 14pt; /* 四号 */
+            font-weight: normal;
+            margin-top: 0.8cm;
+            margin-bottom: 0.5cm;
+        }
+        
+        /* 二级标题 - 小四号黑体 */
+        h2 {
+            font-family: "黑体", SimHei, sans-serif;
+            font-size: 12pt; /* 小四号 */
+            font-weight: normal;
+            margin-top: 0.6cm;
+            margin-bottom: 0.4cm;
+        }
+        
+        /* 三级标题 - 五号宋体，加黑 */
+        h3 {
+            font-family: "宋体", SimSun, serif;
+            font-size: 10.5pt; /* 五号 */
+            font-weight: bold;
+            margin-top: 0.5cm;
+            margin-bottom: 0.3cm;
+        }
+        
+        /* 正文文字 - 五号宋体 */
+        p {
+            font-family: "宋体", SimSun, serif;
+            font-size: 10.5pt; /* 五号 */
+            text-indent: 2em;
+            text-align: justify;
+            margin-top: 0;
+            margin-bottom: 0;
+            line-height: 1.25;
+        }
+        
+        /* 数学公式 */
+        .formula {
+            font-family: "Times New Roman", serif;
+            font-style: italic;
+            text-indent: 4em;
+            margin: 0.3cm 0;
+            text-align: center;
+        }
+        
+        /* 代码块 */
+        .code-block {
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 9pt;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 0.3cm;
+            margin: 0.5cm 0;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+        
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.5cm 0;
+            font-size: 10.5pt;
+        }
+        
+        table th, table td {
+            border: 1px solid black;
+            padding: 0.2cm;
+            text-align: center;
+            font-family: "宋体", SimSun, serif;
+        }
+        
+        table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        
+        /* 图片样式 */
+        .figure {
+            text-align: center;
+            margin: 0.5cm 0;
+        }
+        
+        .figure img {
+            max-width: 90%;
+            height: auto;
+            border: 1px solid #ddd;
+        }
+        
+        .figure-caption {
+            font-size: 10.5pt;
+            margin-top: 0.2cm;
+            text-align: center;
+        }
+        
+        /* 列表样式 */
+        ul, ol {
+            margin-left: 2em;
+            padding-left: 0;
+        }
+        
+        li {
+            font-family: "宋体", SimSun, serif;
+            font-size: 10.5pt;
+            line-height: 1.25;
+            margin-bottom: 0.2cm;
+        }
+        
+        /* 强调文本 */
+        strong {
+            font-weight: bold;
+        }
+        
+        /* 参考文献 */
+        .references {
+            margin-top: 1cm;
+        }
+        
+        .references p {
+            text-indent: 0;
+            margin-bottom: 0.2cm;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 报告标题 -->
+<div class="report-title">聚类分析实验报告</div>
+
+<!-- 学生信息 -->
+<div class="student-info">XX大学 计算机科学与技术学院</div>
+<div class="student-info">学生姓名：XXX  学号：XXXXXXXX</div>
+
+<!-- 指导教师信息 -->
+<div class="teacher-info">指导教师：XXX 教授</div>
+
+<!-- 摘要 -->
+<div class="abstract-section">
+    <span class="abstract-label">摘 要：</span>
+    本文系统阐述了聚类分析中的距离度量原理，实现了四种距离计算方法（欧式距离、闵可夫斯基距离、曼哈顿距离、切比雪夫距离），并对Iris数据集进行了分析。通过Python程序计算了150个样本的距离矩阵，生成了色相图直观展示距离分布。实验结果表明，不同距离度量方法对样本间相似性的评估存在差异，为聚类算法的选择提供了参考。
+</div>
+
+<!-- 关键词 -->
+<div class="keywords-section">
+    <span class="keywords-label">关键词：</span>
+    聚类分析；距离度量；Iris数据集；色相图；数据可视化
+</div>
+
+<!-- 一、距离度量原理 -->
+<h1>一、距离度量原理</h1>
+
+<h2>1.1 基本概念</h2>
+<p>
+距离度量是聚类分析的核心概念，用于衡量样本间的相似性或相异程度。在高维空间中，不同的距离度量方法会导致不同的聚类结果，因此选择合适的距离度量方法对于聚类分析至关重要。
+</p>
+
+<h2>1.2 常用距离度量方法</h2>
+
+<h3>1.2.1 欧式距离（Euclidean Distance）</h3>
+<p>
+欧式距离是最常用的距离度量方法，计算两点间的直线距离：
+</p>
+<p class="formula">
+d(x, y) = √(Σ(xi - yi)²)
+</p>
+<p>
+其中，xi和yi分别表示两个样本在第i个维度上的特征值。欧式距离对异常值敏感，适用于各维度量纲相同的情况。
+</p>
+
+<h3>1.2.2 曼哈顿距离（Manhattan Distance）</h3>
+<p>
+曼哈顿距离计算各维度绝对差之和：
+</p>
+<p class="formula">
+d(x, y) = Σ|xi - yi|
+</p>
+<p>
+曼哈顿距离对异常值的鲁棒性比欧式距离强，适用于城市街区距离等场景。
+</p>
+
+<h3>1.2.3 闵可夫斯基距离（Minkowski Distance）</h3>
+<p>
+闵可夫斯基距离是欧式距离和曼哈顿距离的推广：
+</p>
+<p class="formula">
+d(x, y) = (Σ|xi - yi|^p)^(1/p)
+</p>
+<p>
+其中，p为参数。当p=2时退化为欧式距离，p=1时退化为曼哈顿距离。
+</p>
+
+<h3>1.2.4 切比雪夫距离（Chebyshev Distance）</h3>
+<p>
+切比雪夫距离计算各维度绝对差的最大值：
+</p>
+<p class="formula">
+d(x, y) = max|xi - yi|
+</p>
+<p>
+切比雪夫距离适用于需要考虑最大差异的场景。
+</p>
+
+<!-- 二、算法流程 -->
+<h1>二、算法流程</h1>
+
+<h2>2.1 数据加载与预处理</h2>
+<p>
+从Iris数据集加载150个样本的特征数据，包括萼片长度、萼片宽度、花瓣长度、花瓣宽度四个属性。数据集包含三种鸢尾花，每种50个样本。
+</p>
+
+<h2>2.2 距离矩阵计算</h2>
+<p>
+对于每种距离度量方法，计算150×150的距离矩阵，其中矩阵元素(i,j)表示第i个样本与第j个样本之间的距离。
+</p>
+
+<h2>2.3 色相图生成</h2>
+<p>
+将距离矩阵转换为色相图，其中暖色调表示距离值高（样本差异大），冷色调表示距离值低（样本相似性高）。通过图像直观展示样本间的距离分布。
+</p>
+
+<h2>2.4 算法伪代码</h2>
+<div class="code-block">
+1. 加载Iris数据集
+2. 提取特征数据
+3. 对于每种距离度量方法：
+   a. 初始化距离矩阵
+   b. 计算每对样本间的距离
+   c. 保存距离矩阵到文本文件
+   d. 生成并保存色相图
+4. 生成综合对比图
+5. 输出结果
+</div>
+
+<!-- 三、优缺点分析 -->
+<h1>三、距离度量方法的优缺点</h1>
+
+<h2>3.1 欧式距离</h2>
+<p>
+<strong>优点：</strong>
+</p>
+<ul>
+<li>直观易懂，符合人类对距离的认知</li>
+<li>数学性质良好，可导可微</li>
+<li>在各维度量纲一致时效果较好</li>
+</ul>
+<p>
+<strong>缺点：</strong>
+</p>
+<ul>
+<li>对异常值敏感</li>
+<li>受量纲影响大，需要标准化处理</li>
+<li>计算复杂度较高（需要开方运算）</li>
+</ul>
+
+<h2>3.2 曼哈顿距离</h2>
+<p>
+<strong>优点：</strong>
+</p>
+<ul>
+<li>对异常值不敏感，鲁棒性强</li>
+<li>计算速度快（无需开方）</li>
+<li>适用于高维稀疏数据</li>
+</ul>
+<p>
+<strong>缺点：</strong>
+</p>
+<ul>
+<li>在某些情况下可能不够直观</li>
+<li>同样受量纲影响</li>
+</ul>
+
+<h2>3.3 闵可夫斯基距离</h2>
+<p>
+<strong>优点：</strong>
+</p>
+<ul>
+<li>灵活性高，可通过调整p值适应不同场景</li>
+<li>包含欧式距离和曼哈顿距离作为特例</li>
+</ul>
+<p>
+<strong>缺点：</strong>
+</p>
+<ul>
+<li>参数p的选择需要领域知识</li>
+<li>计算复杂度随p增大而增加</li>
+</ul>
+
+<h2>3.4 切比雪夫距离</h2>
+<p>
+<strong>优点：</strong>
+</p>
+<ul>
+<li>关注最大差异，适用于某些特定场景</li>
+<li>计算简单，只需比较各维度差异</li>
+</ul>
+<p>
+<strong>缺点：</strong>
+</p>
+<ul>
+<li>可能忽视其他维度的差异</li>
+<li>在大多数聚类场景中应用较少</li>
+</ul>
+
+<!-- 四、应用实例 -->
+<h1>四、应用实例</h1>
+
+<h2>4.1 数据集介绍</h2>
+<p>
+Iris数据集是模式识别领域的经典数据集，包含150个样本，分为三类：
+</p>
+<ul>
+<li>Setosa（山鸢尾）：50个样本</li>
+<li>Versicolor（变色鸢尾）：50个样本</li>
+<li>Virginica（维吉尼亚鸢尾）：50个样本</li>
+</ul>
+<p>
+每个样本包含四个属性：
+</p>
+<ul>
+<li>萼片长度（sepal length）</li>
+<li>萼片宽度（sepal width）</li>
+<li>花瓣长度（petal length）</li>
+<li>花瓣宽度（petal width）</li>
+</ul>
+
+<h2>4.2 实验结果</h2>
+
+<h3>4.2.1 距离矩阵统计</h3>
+<table>
+    <tr>
+        <th>距离类型</th>
+        <th>最小值</th>
+        <th>最大值</th>
+        <th>矩阵维度</th>
+    </tr>
+    <tr>
+        <td>欧式距离</td>
+        <td>0.0000</td>
+        <td>7.0852</td>
+        <td>150×150</td>
+    </tr>
+    <tr>
+        <td>曼哈顿距离</td>
+        <td>0.0000</td>
+        <td>12.1000</td>
+        <td>150×150</td>
+    </tr>
+    <tr>
+        <td>闵可夫斯基距离 (p=3)</td>
+        <td>0.0000</td>
+        <td>6.2610</td>
+        <td>150×150</td>
+    </tr>
+    <tr>
+        <td>切比雪夫距离</td>
+        <td>0.0000</td>
+        <td>5.9000</td>
+        <td>150×150</td>
+    </tr>
+</table>
+
+<h3>4.2.2 距离矩阵色相图</h3>
+<p>
+图中黑色虚线分隔了三种鸢尾花样本（每类50个样本），暖色调表示距离值高，冷色调表示距离值低。
+</p>
+
+<div class="figure">
+    <img src="iris/距离矩阵色相图.png" alt="Iris数据集四种距离矩阵色相图">
+    <div class="figure-caption">图1 Iris数据集四种距离矩阵色相图</div>
+</div>
+
+<div class="figure">
+    <img src="iris/欧式距离.png" alt="欧式距离矩阵">
+    <div class="figure-caption">图2 欧式距离矩阵</div>
+</div>
+
+<div class="figure">
+    <img src="iris/曼哈顿距离.png" alt="曼哈顿距离矩阵">
+    <div class="figure-caption">图3 曼哈顿距离矩阵</div>
+</div>
+
+<div class="figure">
+    <img src="iris/闵可夫斯基距离.png" alt="闵可夫斯基距离矩阵">
+    <div class="figure-caption">图4 闵可夫斯基距离矩阵 (p=3)</div>
+</div>
+
+<div class="figure">
+    <img src="iris/切比雪夫距离.png" alt="切比雪夫距离矩阵">
+    <div class="figure-caption">图5 切比雪夫距离矩阵</div>
+</div>
+
+<h3>4.2.3 结果分析</h3>
+<p>
+从色相图可以观察到：
+</p>
+<ul>
+<li><strong>类内距离：</strong>同一类样本（对角区域）呈现冷色调，说明类内样本相似度高</li>
+<li><strong>类间距离：</strong>不同类样本间（非对角区域）呈现暖色调，说明类间差异大</li>
+<li><strong>Setosa与其他类的差异：</strong>Setosa（前50个样本）与Versicolor和Virginica的距离明显大于后两者之间的距离，表明Setosa与其他两类的差异更大</li>
+<li><strong>Versicolor与Virginica的差异：</strong>这两类之间存在一定差异，但比Setosa与它们的差异小</li>
+</ul>
+
+<p>
+不同距离度量方法的结果在定性上相似，但在定量上存在差异：
+</p>
+<ul>
+<li>欧式距离：对差异的敏感性适中</li>
+<li>曼哈顿距离：差异值范围最大，对各维度差异的累加效应明显</li>
+<li>闵可夫斯基距离 (p=3)：差异值范围较小，对大差异的惩罚更明显</li>
+<li>切比雪夫距离：关注最大差异，差异值范围最小</li>
+</ul>
+
+<!-- 五、结论 -->
+<h1>五、结论</h1>
+<p>
+通过本次实验，我们实现了四种常用的距离度量方法，并对Iris数据集进行了分析。主要结论如下：
+</p>
+<p>
+<strong>（1）距离度量方法的选择对聚类结果有重要影响。</strong>不同的距离度量方法从不同角度衡量样本间的相似性，适用于不同的应用场景。
+</p>
+<p>
+<strong>（2）Iris数据集的类别结构明显。</strong>从距离矩阵色相图可以清晰看出，Setosa与其他两类的差异较大，而Versicolor与Virginica之间的差异相对较小，这与已知的Iris数据集特性一致。
+</p>
+<p>
+<strong>（3）色相图是可视化距离矩阵的有效工具。</strong>通过颜色编码，能够直观地展示样本间的距离分布，帮助分析数据结构。
+</p>
+<p>
+<strong>（4）计算效率与距离类型相关。</strong>曼哈顿距离和切比雪夫距离的计算复杂度较低，而欧式距离和闵可夫斯基距离的计算复杂度较高。
+</p>
+<p>
+在实际应用中，应根据数据特性和具体任务选择合适的距离度量方法。对于Iris这类低维数据集，四种距离度量方法都能有效区分不同类别，但在高维数据或异常值较多的场景中，曼哈顿距离等鲁棒性更强的方法可能更适合。
+</p>
+
+<!-- 参考文献 -->
+<div class="references">
+<h1>参考文献</h1>
+<p>
+[1] Fisher R A. The use of multiple measurements in taxonomic problems[J]. Annals of Eugenics, 1936, 7(2): 179-188.
+</p>
+<p>
+[2] Duda R O, Hart P E, Stork D G. Pattern Classification[M]. John Wiley & Sons, 2001.
+</p>
+<p>
+[3] 周志华. 机器学习[M]. 清华大学出版社, 2016.
+</p>
+<p>
+[4] 李航. 统计学习方法[M]. 清华大学出版社, 2019.
+</p>
+<p>
+[5] Scikit-learn: Machine Learning in Python[EB/OL]. https://scikit-learn.org/
+</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心电数据可视化分析实验报告</title>
+    <style>
+        body {
+            font-family: "SimSun", "宋体", sans-serif;
+            font-size: 10.5pt;
+            line-height: 1.25;
+            margin: 0;
+            padding: 2.5cm 2.5cm 2.5cm 3cm;
+            box-sizing: border-box;
+            background-color: white;
+        }
+        h1 {
+            font-family: "SimHei", "黑体", sans-serif;
+            font-size: 16pt;
+            text-align: center;
+            margin-bottom: 12pt;
+        }
+        .info {
+            font-family: "FangSong", "仿宋", serif;
+            font-size: 12pt;
+            text-align: center;
+            margin-bottom: 6pt;
+        }
+        .abstract {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 10.5pt;
+            margin-top: 18pt;
+        }
+        .keywords {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 10.5pt;
+            margin-top: 12pt;
+        }
+        h2 {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 12pt;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+            font-weight: bold;
+        }
+        h3 {
+            font-family: "SimHei", "黑体", sans-serif;
+            font-size: 11pt;
+            margin-top: 18pt;
+            margin-bottom: 10pt;
+        }
+        h4 {
+            font-family: "SimSun", "宋体", sans-serif;
+            font-size: 10.5pt;
+            margin-top: 14pt;
+            margin-bottom: 8pt;
+            font-weight: bold;
+        }
+        p {
+            text-indent: 21pt;
+            margin-top: 0;
+            margin-bottom: 10pt;
+        }
+        .code {
+            font-family: "Courier New", monospace;
+            font-size: 9pt;
+            background-color: #f5f5f5;
+            padding: 10pt;
+            margin: 10pt 0;
+            border-radius: 4pt;
+            white-space: pre-wrap;
+        }
+        .result {
+            font-family: "Courier New", monospace;
+            font-size: 9pt;
+            background-color: #f0f8ff;
+            padding: 10pt;
+            margin: 10pt 0;
+            border-radius: 4pt;
+            white-space: pre-wrap;
+        }
+        .image-container {
+            text-align: center;
+            margin: 16pt 0;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+        }
+        .image-caption {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 6pt;
+        }
+        ul {
+            margin-top: 0;
+            margin-bottom: 10pt;
+            padding-left: 21pt;
+        }
+        li {
+            margin-bottom: 6pt;
+        }
+        .question {
+            font-weight: bold;
+            color: #0066cc;
+        }
+        .answer {
+            margin-top: 6pt;
+            margin-bottom: 12pt;
+        }
+    </style>
+</head>
+<body>
+
+<h1>心电数据可视化分析实验报告</h1>
+
+<div class="info">XX大学 XX学院</div>
+<div class="info">学生姓名：XXX</div>
+<div class="info">指导教师：XXX 教授</div>
+
+<div class="abstract">
+    <strong>摘　　要：</strong>本实验基于MIT-BIH心率失常数据库，对一位患者的300个心拍样本数据进行可视化分析。通过Python编程实现了数据集导入、散点图、三维散点图、曲线图、盒状图和直方图等多种可视化方法，深入分析了VT（室性心动过速）、P（起搏心率）和F（心室融合心跳）三类心电波形的特征分布情况。
+</div>
+
+<div class="keywords">
+    <strong>关 键 词：</strong>心电数据；数据可视化；PCA降维；散点图；直方图
+</div>
+
+<h2>一、实验目的与任务</h2>
+
+<p>本实验旨在通过Python编程对心电数据进行可视化分析，掌握数据可视化的基本方法和技巧，理解不同可视化方法在数据分析中的应用场景。</p>
+
+<p>实验任务包括：</p>
+<ul>
+    <li>导入并输出心电数据集pca2</li>
+    <li>绘制两种特征散点图及所有特征两两配对的散点图</li>
+    <li>绘制50个样本数据的三维散点图</li>
+    <li>绘制样本特征属性曲线图</li>
+    <li>绘制盒状图分析数据分布</li>
+    <li>绘制单个特征及四种属性总体直方图</li>
+</ul>
+
+<h2>二、实验内容和要求</h2>
+
+<h3>2.1 数据集介绍</h3>
+<p>实验数据集来自MIT-BIH标准心率失常数据库，选取一位患者的300个心拍样本，包含三类心电波形：VT（室性心动过速）、P（起搏心率）和F（心室融合心跳），每类各100个样本。数据集pca2包含前四列4个PCA降维后的特征和最后一列类标签。</p>
+
+<h3>2.2 实验要求</h3>
+<ul>
+    <li>使用Python的pandas库导入Excel数据集</li>
+    <li>使用matplotlib库进行数据可视化</li>
+    <li>分析特征组合对三类心电数据的区分能力</li>
+    <li>分析各类别样本属性值的分布情况</li>
+</ul>
+
+<h2>三、实验结果与问题答案</h2>
+
+<h3>3.1 数据集导入与输出</h3>
+<p>使用pandas库读取pca2.xlsx文件，数据集包含300个样本，6列数据（Unnamed: 0、特征1、特征2、特征3、特征4、label）。</p>
+
+<div class="result">
+数据集形状: (300, 6)
+列名: ['Unnamed: 0', '特征1', '特征2', '特征3', '特征4', 'label']
+
+各类别样本数量:
+label
+1    100
+2    100
+3    100
+Name: count, dtype: int64
+</div>
+
+<h3>3.2 散点图绘制</h3>
+<p>绘制了两种特征组合的散点图（特征1 vs 特征2，特征3 vs 特征4）以及所有特征两两配对的散点图矩阵。</p>
+
+<div class="image-container">
+    <img src="两种特征散点图.png" alt="两种特征散点图">
+    <div class="image-caption">图1 两种特征组合散点图（左：特征1 vs 特征2；右：特征3 vs 特征4）</div>
+</div>
+
+<div class="image-container">
+    <img src="所有特征两两配对散点图.png" alt="所有特征两两配对散点图">
+    <div class="image-caption">图2 所有特征两两配对散点图矩阵</div>
+</div>
+
+<h4>问题：哪两个特征属性组合不能很好地区分三类心电数据？</h4>
+<p class="answer">
+通过分析散点图可以得出以下结论：
+</p>
+<ul>
+    <li><strong>特征1 vs 特征2</strong>：三类数据有较好区分，但VT和F有部分重叠</li>
+    <li><strong>特征3 vs 特征4</strong>：三类数据区分效果最差，VT和F几乎完全重叠</li>
+    <li><strong>特征2 vs 特征3</strong>：VT和F重叠严重，难以区分</li>
+</ul>
+<p class="answer">
+<strong>结论：特征3和特征4的组合不能很好地区分三类心电数据，尤其是VT和F两类几乎无法区分。</strong>
+</p>
+
+<h3>3.3 三维散点图绘制</h3>
+<p>绘制了前50个样本的三维散点图，使用特征1、特征2、特征3作为三个坐标轴。</p>
+
+<div class="image-container">
+    <img src="三维散点图.png" alt="三维散点图">
+    <div class="image-caption">图3 50样本三维散点图（红色：VT；绿色：P；蓝色：F）</div>
+</div>
+
+<p>从三维散点图可以看出，P类（起搏心率）在空间中相对独立，而VT和F类存在较多重叠。</p>
+
+<h3>3.4 特征曲线图绘制</h3>
+<p>绘制了每个特征在三类样本中的变化趋势曲线。</p>
+
+<div class="image-container">
+    <img src="特征曲线图.png" alt="特征曲线图">
+    <div class="image-caption">图4 样本特征属性曲线图</div>
+</div>
+
+<p>曲线图展示了各类样本在不同特征上的取值变化，特征1和特征2的曲线区分度较高，特征3和特征4的曲线重叠较多。</p>
+
+<h3>3.5 盒状图绘制</h3>
+<p>绘制了每个特征在三类样本中的盒状图，展示数据分布情况。</p>
+
+<div class="image-container">
+    <img src="盒状图.png" alt="盒状图">
+    <div class="image-caption">图5 各类特征值盒状图</div>
+</div>
+
+<h4>问题：从盒状图中可以看出哪种样本类别的哪种属性的值分布集中，哪种属性难以区分三种心电异常情况？</h4>
+<p class="answer">
+通过分析盒状图可以得出以下结论：
+</p>
+<ul>
+    <li><strong>特征1</strong>：P类（起搏心率）的值分布较集中（偏低），VT和F有较多重叠</li>
+    <li><strong>特征2</strong>：三类数据分布相对分散，但VT和F仍有重叠</li>
+    <li><strong>特征3</strong>：VT和F的分布集中且重叠严重，难以区分</li>
+    <li><strong>特征4</strong>：P类的值明显偏高，但VT和F难以区分</li>
+</ul>
+<p class="answer">
+<strong>结论：P类的特征1属性值分布最集中；特征3和特征4难以区分三种心电异常情况，尤其是VT和F两类。</strong>
+</p>
+
+<h3>3.6 直方图绘制</h3>
+<p>绘制了单个特征的直方图和四种属性的总体直方图。</p>
+
+<div class="image-container">
+    <img src="各特征直方图.png" alt="各特征直方图">
+    <div class="image-caption">图6 各特征直方图</div>
+</div>
+
+<div class="image-container">
+    <img src="四种属性总体直方图.png" alt="四种属性总体直方图">
+    <div class="image-caption">图7 四种属性总体直方图</div>
+</div>
+
+<p>直方图进一步验证了特征1和特征2对三类数据有较好的区分能力，而特征3和特征4的分布重叠严重。</p>
+
+<h2>四、实验小结</h2>
+
+<h3>4.1 实验体会</h3>
+<p>通过本次实验，我掌握了Python数据可视化的基本方法，包括散点图、三维散点图、曲线图、盒状图和直方图的绘制。实验结果表明，PCA降维后的四个特征中，特征1和特征2对三类心电数据有较好的区分能力，而特征3和特征4的区分能力较弱。这为后续的分类算法选择提供了重要参考。</p>
+
+<h3>4.2 遇到的问题及解决方法</h3>
+<ul>
+    <li><strong>问题1：读取Excel文件失败</strong>
+        <p>原因：缺少openpyxl库。解决方法：使用pip install openpyxl安装该库。</p>
+    </li>
+    <li><strong>问题2：标签匹配失败</strong>
+        <p>原因：数据集中的label列是数值类型（1、2、3），而代码中使用字符串（'VT'、'P'、'F'）进行匹配。解决方法：添加标签映射字典，将数值转换为字符串标签。</p>
+    </li>
+    <li><strong>问题3：直方图颜色参数错误</strong>
+        <p>原因：hist函数的color参数要求颜色数量与数据集数量一致。解决方法：使用循环逐个绘制每个类别的直方图。</p>
+    </li>
+    <li><strong>问题4：中文显示乱码</strong>
+        <p>原因：matplotlib默认字体不支持中文。解决方法：设置字体为SimHei，并禁用负号显示问题。</p>
+    </li>
+    <li><strong>问题5：三维散点图只显示一类数据</strong>
+        <p>原因：代码只取了前50个样本，而数据集前100个样本都是VT类（标签1），导致三维散点图只显示红色散点。解决方法：从每类中分别取部分样本，VT类取17个，P类取17个，F类取16个，总共50个样本。</p>
+    </li>
+</ul>
+
+<h3>4.3 实验总结</h3>
+<p>本次实验成功完成了心电数据的可视化分析，通过多种可视化方法深入了解了数据的分布特征。实验结果表明，VT和F两类心电波形在特征空间中存在较大重叠，这对后续的分类任务提出了挑战。在实际应用中，可以考虑选择区分能力较强的特征（如特征1和特征2）进行分类，或者尝试其他降维方法提高特征的区分度。</p>
+
+</body>
+</html>

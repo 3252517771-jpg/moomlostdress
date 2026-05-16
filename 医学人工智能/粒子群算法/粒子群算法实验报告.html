@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>粒子群算法实验报告</title>
+    <style>
+        /* 页面设置 - A4纸 */
+        @page {
+            size: A4;
+            margin-top: 2.5cm;
+            margin-bottom: 2.5cm;
+            margin-left: 3cm;
+            margin-right: 2.5cm;
+        }
+        
+        body {
+            font-family: "宋体", SimSun, serif;
+            font-size: 10.5pt; /* 五号 */
+            line-height: 1.25;
+            margin: 0;
+            padding: 0;
+            width: 210mm;
+            margin: 0 auto;
+            background: white;
+            color: black;
+        }
+        
+        /* 报告标题 - 3号黑体，居中 */
+        .report-title {
+            font-family: "黑体", SimHei, sans-serif;
+            font-size: 16pt; /* 3号 */
+            text-align: center;
+            font-weight: bold;
+            margin-top: 2cm;
+            margin-bottom: 1cm;
+        }
+        
+        /* 学校名、学生姓名 - 小四号仿宋体，居中 */
+        .student-info {
+            font-family: "仿宋", FangSong, serif;
+            font-size: 12pt; /* 小四号 */
+            text-align: center;
+            margin-bottom: 0.3cm;
+        }
+        
+        /* 指导教师 - 另起一行，小四号仿宋体，居中 */
+        .teacher-info {
+            font-family: "仿宋", FangSong, serif;
+            font-size: 12pt; /* 小四号 */
+            text-align: center;
+            margin-bottom: 2cm;
+        }
+        
+        /* 摘要 - 五号楷体，不超过120字 */
+        .abstract-section {
+            font-family: "楷体", KaiTi, serif;
+            font-size: 10.5pt; /* 五号 */
+            text-indent: 2em;
+            margin-bottom: 0.5cm;
+            text-align: justify;
+        }
+        
+        .abstract-label {
+            font-weight: bold;
+        }
+        
+        /* 关键词 - 3-5个，分号隔开，五号楷体 */
+        .keywords-section {
+            font-family: "楷体", KaiTi, serif;
+            font-size: 10.5pt; /* 五号 */
+            text-indent: 2em;
+            margin-bottom: 1.5cm;
+        }
+        
+        .keywords-label {
+            font-weight: bold;
+        }
+        
+        /* 一级标题 - 四号楷体 */
+        h1 {
+            font-family: "楷体", KaiTi, serif;
+            font-size: 14pt; /* 四号 */
+            font-weight: normal;
+            margin-top: 0.8cm;
+            margin-bottom: 0.5cm;
+        }
+        
+        /* 二级标题 - 小四号黑体 */
+        h2 {
+            font-family: "黑体", SimHei, sans-serif;
+            font-size: 12pt; /* 小四号 */
+            font-weight: normal;
+            margin-top: 0.6cm;
+            margin-bottom: 0.4cm;
+        }
+        
+        /* 三级标题 - 五号宋体，加黑 */
+        h3 {
+            font-family: "宋体", SimSun, serif;
+            font-size: 10.5pt; /* 五号 */
+            font-weight: bold;
+            margin-top: 0.5cm;
+            margin-bottom: 0.3cm;
+        }
+        
+        /* 正文文字 - 五号宋体 */
+        p {
+            font-family: "宋体", SimSun, serif;
+            font-size: 10.5pt; /* 五号 */
+            text-indent: 2em;
+            text-align: justify;
+            margin-top: 0;
+            margin-bottom: 0;
+            line-height: 1.25;
+        }
+        
+        /* 数学公式 */
+        .formula {
+            font-family: "Times New Roman", serif;
+            font-style: italic;
+            text-indent: 4em;
+            margin: 0.3cm 0;
+            text-align: center;
+        }
+        
+        /* 代码块 */
+        .code-block {
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 9pt;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 0.3cm;
+            margin: 0.5cm 0;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+        
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.5cm 0;
+            font-size: 10.5pt;
+        }
+        
+        table th, table td {
+            border: 1px solid black;
+            padding: 0.2cm;
+            text-align: center;
+            font-family: "宋体", SimSun, serif;
+        }
+        
+        table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        
+        /* 图片样式 */
+        .figure {
+            text-align: center;
+            margin: 0.5cm 0;
+        }
+        
+        .figure img {
+            max-width: 90%;
+            height: auto;
+            border: 1px solid #ddd;
+        }
+        
+        .figure-caption {
+            font-size: 10.5pt;
+            margin-top: 0.2cm;
+            text-align: center;
+        }
+        
+        /* 列表样式 */
+        ul, ol {
+            margin-left: 2em;
+            padding-left: 0;
+        }
+        
+        li {
+            font-family: "宋体", SimSun, serif;
+            font-size: 10.5pt;
+            line-height: 1.25;
+            margin-bottom: 0.2cm;
+        }
+        
+        /* 强调文本 */
+        strong {
+            font-weight: bold;
+        }
+        
+        /* 参考文献 */
+        .references {
+            margin-top: 1cm;
+        }
+        
+        .references p {
+            text-indent: 0;
+            margin-bottom: 0.2cm;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 报告标题 -->
+<div class="report-title">粒子群优化算法原理与应用实验报告</div>
+
+<!-- 学生信息 -->
+<div class="student-info">XX大学 计算机科学与技术学院</div>
+<div class="student-info">学生姓名：XXX  学号：XXXXXXXX</div>
+
+<!-- 指导教师信息 -->
+<div class="teacher-info">指导教师：XXX 教授</div>
+
+<!-- 摘要 -->
+<div class="abstract-section">
+    <span class="abstract-label">摘 要：</span>
+    本文系统阐述了粒子群优化算法的基本原理、算法流程及其在函数优化问题中的应用。通过Python实现了完整的PSO程序，并对目标函数f(x)=x²+10·cos(2πx)+10进行了最大化求解。实验对比了不同惯性因子和加速因子参数对算法性能的影响，验证了PSO算法在全局优化问题中的有效性和收敛特性。结果表明，合理设置算法参数能够显著提升搜索效率和求解精度。
+</div>
+
+<!-- 关键词 -->
+<div class="keywords-section">
+    <span class="keywords-label">关键词：</span>
+    粒子群算法；函数优化；参数调优；群体智能；人工智能
+</div>
+
+<!-- 一、粒子群算法原理 -->
+<h1>一、粒子群优化算法原理</h1>
+
+<h2>1.1 基本概念</h2>
+<p>
+粒子群优化算法（Particle Swarm Optimization，PSO）是由Kennedy和Eberhart于1995年提出的一种基于群体智能的随机全局优化技术。该算法源于对鸟群捕食行为的研究，通过模拟鸟群觅食过程中的信息共享和协作机制来搜索问题的最优解。
+</p>
+<p>
+PSO算法的核心思想是将每个潜在解视为搜索空间中的一个"粒子"，所有粒子组成一个种群。每个粒子根据自身历史最优位置和群体历史最优位置来调整飞行速度和方向，最终收敛到最优解区域。
+</p>
+
+<h2>1.2 生物学基础</h2>
+<p>
+PSO算法的灵感来源于鸟类群体的觅食行为研究。研究表明，鸟群在寻找食物时具有以下特征：
+</p>
+<p>
+<strong>（1）个体记忆：</strong>每只鸟都记得自己曾经找到的最佳食物位置（个体最优pbest）。
+</p>
+<p>
+<strong>（2）社会学习：</strong>鸟群中个体之间会共享信息，每只鸟都知道整个群体找到的最佳食物位置（全局最优gbest）。
+</p>
+<p>
+<strong>（3）协同搜索：</strong>个体根据自身经验和群体经验调整飞行方向和速度，实现高效的食物搜索。
+</p>
+
+<h2>1.3 核心术语</h2>
+<p>
+<strong>（1）粒子（Particle）：</strong>搜索空间中的一个潜在解，包含位置向量和速度向量。
+</p>
+<p>
+<strong>（2）位置（Position）：</strong>粒子在当前迭代中所处的坐标，代表问题的一个候选解。
+</p>
+<p>
+<strong>（3）速度（Velocity）：</strong>粒子位置变化的速率和方向，决定粒子的移动轨迹。
+</p>
+<p>
+<strong>（4）个体最优（pbest）：</strong>粒子自身历史上找到的最优位置。
+</p>
+<p>
+<strong>（5）全局最优（gbest）：</strong>整个种群历史上找到的最优位置。
+</p>
+<p>
+<strong>（6）适应度（Fitness）：</strong>衡量粒子位置优劣的指标，由目标函数值确定。
+</p>
+<p>
+<strong>（7）惯性权重（w）：</strong>控制粒子保持原有速度的程度，平衡全局探索和局部开发。
+</p>
+<p>
+<strong>（8）加速因子（c1, c2）：</strong>分别控制粒子向个体最优和全局最优学习的程度。
+</p>
+
+<h2>1.4 数学模型</h2>
+<p>
+PSO算法的速度和位置更新公式为：
+</p>
+<p class="formula">
+v<sub>i</sub>(t+1) = w·v<sub>i</sub>(t) + c₁·r₁·(pbest<sub>i</sub> - x<sub>i</sub>(t)) + c₂·r₂·(gbest - x<sub>i</sub>(t))
+</p>
+<p class="formula">
+x<sub>i</sub>(t+1) = x<sub>i</sub>(t) + v<sub>i</sub>(t+1)
+</p>
+<p>
+其中：
+</p>
+<p>
+<strong>v<sub>i</sub>(t)</strong> 为第i个粒子在第t代的速度；<strong>x<sub>i</sub>(t)</strong> 为第i个粒子在第t代的位置；<strong>w</strong> 为惯性权重；<strong>c₁</strong> 为个体学习因子；<strong>c₂</strong> 为社会学习因子；<strong>r₁, r₂</strong> 为[0,1]范围内的随机数；<strong>pbest<sub>i</sub></strong> 为第i个粒子的个体最优位置；<strong>gbest</strong> 为全局最优位置。
+</p>
+
+<!-- 二、算法流程 -->
+<h1>二、算法流程</h1>
+
+<h2>2.1 算法步骤</h2>
+<p>
+标准粒子群优化算法的执行流程如下：
+</p>
+<p>
+<strong>步骤1：初始化种群</strong>
+</p>
+<p>
+在搜索空间内随机生成N个粒子的初始位置和速度。对于D维问题，每个粒子的位置和速度都是D维向量。
+</p>
+<p>
+<strong>步骤2：计算适应度</strong>
+</p>
+<p>
+计算每个粒子的适应度值（即目标函数值），并初始化每个粒子的个体最优位置pbest和全局最优位置gbest。
+</p>
+<p>
+<strong>步骤3：更新个体最优</strong>
+</p>
+<p>
+对于每个粒子，比较当前适应度与个体最优适应度。如果当前适应度更优，则更新该粒子的pbest为当前位置。
+</p>
+<p>
+<strong>步骤4：更新全局最优</strong>
+</p>
+<p>
+比较所有粒子的当前适应度与全局最优适应度。如果存在更优的适应度，则更新gbest为对应粒子的位置。
+</p>
+<p>
+<strong>步骤5：更新速度和位置</strong>
+</p>
+<p>
+根据速度更新公式和位置更新公式，计算每个粒子的新速度和新位置。需要进行边界处理，确保粒子不超出搜索空间。
+</p>
+<p>
+<strong>步骤6：终止判断</strong>
+</p>
+<p>
+检查是否满足终止条件（如达到最大迭代次数或找到满意解）。若满足则输出最优解；否则返回步骤2继续迭代。
+</p>
+
+<h2>2.2 算法伪代码</h2>
+<div class="code-block">
+Algorithm: Particle Swarm Optimization<br>
+Input: n_particles, dim, max_iter, w, c1, c2, x_min, x_max<br>
+Output: gbest_position, gbest_fitness<br><br>
+1. Initialize positions and velocities randomly<br>
+2. Evaluate fitness for each particle<br>
+3. Initialize pbest and gbest<br>
+4. For iteration = 1 to max_iter do<br>
+5. &nbsp;&nbsp;&nbsp;For each particle i do<br>
+6. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Calculate fitness<br>
+7. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update pbest[i] if current fitness is better<br>
+8. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update gbest if current fitness is better<br>
+9. &nbsp;&nbsp;&nbsp;End For<br>
+10. &nbsp;&nbsp;For each particle i do<br>
+11. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update velocity: v = w*v + c1*r1*(pbest-x) + c2*r2*(gbest-x)<br>
+12. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update position: x = x + v<br>
+13. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Apply boundary constraints<br>
+14. &nbsp;&nbsp;End For<br>
+15. End For<br>
+16. Return gbest_position, gbest_fitness
+</div>
+
+<h2>2.3 算法流程图</h2>
+<div class="figure">
+    <p style="text-align: center; font-size: 10.5pt;">
+    <strong>开始</strong> → <strong>初始化粒子群</strong> → <strong>计算适应度</strong> → <strong>更新pbest和gbest</strong><br>
+    ↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+    <strong>满足终止条件？</strong> ← <strong>更新速度和位置</strong> ← <strong>边界处理</strong><br>
+    ↓是&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓否<br>
+    <strong>输出最优解 → 结束</strong>
+    </p>
+</div>
+
+<!-- 三、优缺点分析 -->
+<h1>三、粒子群算法的优缺点</h1>
+
+<h2>3.1 优点</h2>
+<p>
+<strong>（1）算法简单易实现</strong>
+</p>
+<p>
+PSO算法结构简单，仅需调整少数几个参数（w, c1, c2），易于理解和编程实现。相比遗传算法等进化算法，PSO不需要复杂的编码、交叉和变异操作。
+</p>
+<p>
+<strong>（2）收敛速度快</strong>
+</p>
+<p>
+由于粒子直接向最优位置移动，PSO通常具有较快的收敛速度，尤其在优化后期能够快速逼近最优解。这使得PSO在实际应用中具有较高的效率。
+</p>
+<p>
+<strong>（3）参数少且易调整</strong>
+</p>
+<p>
+PSO仅有3个主要参数需要调整：惯性权重w、个体学习因子c1和社会学习因子c2。大量研究表明，这些参数的推荐取值范围相对固定，降低了参数调优的难度。
+</p>
+<p>
+<strong>（4）并行性强</strong>
+</p>
+<p>
+种群中多个粒子的适应度评估和位置更新可以并行执行，非常适合在多核处理器或GPU上运行，能够显著提高计算效率。
+</p>
+<p>
+<strong>（5）全局搜索能力强</strong>
+</p>
+<p>
+通过动态调整惯性权重，PSO能够在前期进行大范围的全局探索，在后期进行精细的局部开发，有效平衡了探索和开发的关系。
+</p>
+
+<h2>3.2 缺点</h2>
+<p>
+<strong>（1）易陷入局部最优</strong>
+</p>
+<p>
+当种群多样性降低时，所有粒子可能快速聚集到某个局部最优解附近，导致早熟收敛。特别是对于多峰复杂函数，PSO容易陷入局部最优而无法找到全局最优。
+</p>
+<p>
+<strong>（2）缺乏理论保证</strong>
+</p>
+<p>
+PSO算法的收敛性理论分析较为困难，目前尚缺乏严格的数学证明来保证算法一定能收敛到全局最优解。
+</p>
+<p>
+<strong>（3）对高维问题效果有限</strong>
+</p>
+<p>
+随着问题维度的增加，搜索空间呈指数级增长，PSO的性能会显著下降。对于高维优化问题，通常需要采用改进策略或与其他算法结合。
+</p>
+<p>
+<strong>（4）边界处理困难</strong>
+</p>
+<p>
+当粒子飞出搜索空间边界时，如何有效地将粒子拉回可行域是一个挑战。简单的反射边界可能导致粒子聚集在边界，周期性边界可能破坏搜索的连续性。
+</p>
+
+<h2>3.3 改进策略</h2>
+<p>
+针对PSO算法的缺点，研究者提出了多种改进策略：
+</p>
+<p>
+<strong>（1）动态惯性权重：</strong>线性递减或非线性调整惯性权重，平衡前期探索和后期开发。
+</p>
+<p>
+<strong>（2）多种群策略：</strong>维护多个子种群，通过信息共享或竞争机制保持种群多样性。
+</p>
+<p>
+<strong>（3）混合算法：</strong>将PSO与局部搜索算法（如梯度下降法）或其他进化算法结合，发挥各自优势。
+</p>
+<p>
+<strong>（4）自适应参数调整：</strong>根据算法运行状态动态调整c1和c2，提高算法的自适应能力。
+</p>
+
+<!-- 四、应用实例 -->
+<h1>四、应用实例</h1>
+
+<h2>4.1 问题描述</h2>
+<p>
+本实验使用粒子群优化算法求解以下函数的最大值：
+</p>
+<p class="formula">
+f(x) = x² + 10·cos(2πx) + 10
+</p>
+<p>
+该函数是一个典型的多峰函数，在区间[-10, 10]内存在多个局部极值点。由于x²项的主导作用，函数值随|x|增大而增大，全局最大值出现在边界处。
+</p>
+<p>
+理论分析：
+</p>
+<p class="formula">
+当x=±10时，f(±10) = 100 + 10·cos(20π) + 10 = 100 + 10 + 10 = 120
+</p>
+<p>
+因此，该函数在搜索范围[-10, 10]内的全局最大值为120，最优点为x=±10。
+</p>
+
+<h2>4.2 算法实现</h2>
+<p>
+<strong>（1）参数设置</strong>
+</p>
+<p>
+标准配置参数如下表所示：
+</p>
+<table>
+    <tr>
+        <th>参数</th>
+        <th>符号</th>
+        <th>取值</th>
+    </tr>
+    <tr>
+        <td>粒子数量</td>
+        <td>N</td>
+        <td>50</td>
+    </tr>
+    <tr>
+        <td>问题维度</td>
+        <td>D</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>最大迭代次数</td>
+        <td>T</td>
+        <td>200</td>
+    </tr>
+    <tr>
+        <td>惯性权重范围</td>
+        <td>w</td>
+        <td>0.9→0.4</td>
+    </tr>
+    <tr>
+        <td>个体学习因子</td>
+        <td>c₁</td>
+        <td>2.0</td>
+    </tr>
+    <tr>
+        <td>社会学习因子</td>
+        <td>c₂</td>
+        <td>2.0</td>
+    </tr>
+    <tr>
+        <td>搜索范围</td>
+        <td>[x_min, x_max]</td>
+        <td>[-10, 10]</td>
+    </tr>
+</table>
+
+<p>
+<strong>（2）边界处理策略</strong>
+</p>
+<p>
+采用周期性边界条件：当粒子飞出搜索空间时，从另一侧重新进入。这种策略保持了种群的均匀分布，避免粒子聚集在边界处。
+</p>
+<p class="formula">
+x<sub>new</sub> = ((x - x<sub>min</sub>) mod (x<sub>max</sub> - x<sub>min</sub>)) + x<sub>min</sub>
+</p>
+
+<h2>4.3 实验结果</h2>
+<p>
+<strong>（1）标准配置运行结果</strong>
+</p>
+<p>
+使用动态惯性权重（w从0.9递减到0.4）、c1=2.0、c2=2.0的标准配置运行PSO算法，经过200代迭代，算法能够有效收敛到接近理论最优值的解。
+</p>
+<div class="figure">
+    <img src="pso_results.png" alt="粒子群算法实验结果">
+    <div class="figure-caption">图1 粒子群算法实验结果对比</div>
+</div>
+<p>
+<strong>（2）参数对比实验</strong>
+</p>
+<p>
+为研究不同参数对算法性能的影响，进行了三组对比实验：
+</p>
+<div class="figure">
+    <img src="终端运行结果1.png" alt="粒子群算法参数说明">
+    <div class="figure-caption">图2 粒子群算法参数说明与分析</div>
+</div>
+<p>
+<strong>实验1：不同惯性因子w的影响</strong>
+</p>
+<div class="figure">
+    <img src="终端运行结果2.png" alt="不同惯性因子w的影响">
+    <div class="figure-caption">图3 不同惯性因子w的影响实验结果</div>
+</div>
+<p>
+测试了w=0.4、0.6、0.8、1.0四种固定惯性权重的情况。实验结果表明：
+</p>
+<ul>
+<li>w=0.4：局部搜索能力强，收敛速度快，但容易陷入局部最优</li>
+<li>w=0.6：平衡了探索和开发，性能较好</li>
+<li>w=0.8：全局搜索能力强，适合复杂多峰问题</li>
+<li>w=1.0：探索能力最强，但收敛速度慢，可能错过最优解</li>
+</ul>
+
+<p>
+<strong>实验2：不同加速因子c1的影响</strong>
+</p>
+<div class="figure">
+    <img src="终端运行结果3.png" alt="不同加速因子c1的影响">
+    <div class="figure-caption">图4 不同加速因子c1的影响实验结果</div>
+</div>
+<p>
+测试了c1=0.5、1.0、2.0、3.0四种情况（固定w=0.9→0.4，c2=2.0）。实验结果表明：
+</p>
+<ul>
+<li>c1=0.5：忽视个体经验，过度依赖群体信息，容易早熟</li>
+<li>c1=1.0：个体经验权重较低，收敛较快</li>
+<li>c1=2.0：平衡个体和群体经验，性能最优</li>
+<li>c1=3.0：过分强调个体经验，多样性好但收敛慢</li>
+</ul>
+
+<p>
+<strong>实验3：不同加速因子c2的影响</strong>
+</p>
+<div class="figure">
+    <img src="终端运行结果4.png" alt="不同加速因子c2的影响">
+    <div class="figure-caption">图5 不同加速因子c2的影响实验结果</div>
+</div>
+<p>
+测试了c2=0.5、1.0、2.0、3.0四种情况（固定w=0.9→0.4，c1=2.0）。实验结果表明：
+</p>
+<ul>
+<li>c2=0.5：忽视群体经验，搜索效率低，收敛慢</li>
+<li>c2=1.0：群体经验权重较低，收敛较慢</li>
+<li>c2=2.0：平衡个体和群体经验，性能最优</li>
+<li>c2=3.0：过分强调群体经验，收敛快但易早熟</li>
+</ul>
+
+<h2>4.4 结果分析</h2>
+<p>
+<strong>（1）惯性权重的影响</strong>
+</p>
+<p>
+惯性权重w是PSO算法中最关键的参数之一。较大的w值有利于全局探索，适合搜索初期；较小的w值有利于局部开发，适合搜索后期。动态调整的惯性权重（从0.9递减到0.4）能够自动平衡探索和开发，取得了最好的效果。
+</p>
+<p>
+<strong>（2）加速因子的平衡</strong>
+</p>
+<p>
+实验结果表明，当c1≈c2≈2.0时，算法性能最优。这验证了"平衡个体探索和群体利用"的原则。c1>c2时侧重个体探索，适合复杂多峰问题；c1<c2时侧重群体利用，适合单峰或简单问题。
+</p>
+<p>
+<strong>（3）边界处理的重要性</strong>
+</p>
+<p>
+对于边界主导的优化问题（最优解在边界处），边界处理策略至关重要。周期性边界条件避免了粒子聚集在边界，保持了种群的多样性，使算法能够持续探索整个搜索空间。
+</p>
+
+<h2>4.5 实验结论</h2>
+<p>
+通过本实验可以得出以下结论：
+</p>
+<p>
+<strong>（1）</strong>粒子群优化算法能够有效求解多峰函数的全局最优问题，在合理参数设置下可以找到接近理论最优的解。
+</p>
+<p>
+<strong>（2）</strong>动态惯性权重策略显著优于固定权重，推荐的参数范围为：w从0.9递减到0.4。
+</p>
+<p>
+<strong>（3）</strong>加速因子c1和c2的最佳取值为2.0左右，需要根据具体问题微调。
+</p>
+<p>
+<strong>（4）</strong>对于边界主导的优化问题，周期性边界条件能够有效避免早熟收敛。
+</p>
+<p>
+<strong>（5）</strong>PSO算法具有收敛速度快、参数少、易实现等优点，但也存在易陷入局部最优的缺点，需要通过参数调整和边界处理策略来改善。
+</p>
+
+<!-- 五、结论 -->
+<h1>五、结论</h1>
+<p>
+本文系统阐述了粒子群优化算法的基本原理和算法流程，分析了其优缺点，并通过函数优化实例验证了PSO算法的有效性。实验结果表明：
+</p>
+<p>
+<strong>（1）</strong>粒子群算法通过模拟群体智能行为，能够有效地在全局范围内搜索最优解，特别适合处理连续空间的优化问题。
+</p>
+<p>
+<strong>（2）</strong>算法性能高度依赖于参数设置，动态惯性权重和平衡的加速因子能够显著提升算法性能。本实验推荐的参数配置为：w=0.9→0.4，c1=2.0，c2=2.0。
+</p>
+<p>
+<strong>（3）</strong>PSO算法具有算法简单、收敛速度快、参数少等优点，但也存在易陷入局部最优、对高维问题效果有限等缺点。通过引入动态权重、多种群策略、混合算法等改进策略，可以显著提升算法性能。
+</p>
+<p>
+<strong>（4）</strong>在实际应用中，建议结合问题特性选择合适的边界处理策略，并通过多次实验确定最佳参数配置，以获得满意的优化效果。
+</p>
+
+<!-- 参考文献 -->
+<div class="references">
+<h1>参考文献</h1>
+<p>
+[1] Kennedy J, Eberhart R. Particle swarm optimization[C]//Proceedings of ICNN'95 - International Conference on Neural Networks. IEEE, 1995, 4: 1942-1948.
+</p>
+<p>
+[2] Shi Y, Eberhart R. A modified particle swarm optimizer[C]//IEEE International Conference on Evolutionary Computation. IEEE, 1998: 69-73.
+</p>
+<p>
+[3] 陈贵敏, 贾建援, 韩琪. 粒子群优化算法的惯性权值递减策略研究[J]. 西安交通大学学报, 2006, 40(1): 53-56.
+</p>
+<p>
+[4] Poli R, Kennedy J, Blackwell T. Particle swarm optimization[J]. Swarm Intelligence, 2007, 1(1): 33-57.
+</p>
+<p>
+[5] Clerc M, Kennedy J. The particle swarm-explosion, stability, and convergence in a multidimensional complex space[J]. IEEE Transactions on Evolutionary Computation, 2002, 6(1): 58-73.
+</p>
+</div>
+
+</body>
+</html>

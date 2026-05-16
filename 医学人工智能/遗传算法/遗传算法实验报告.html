@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遗传算法实验报告</title>
+    <style>
+        /* 页面设置 - A4纸 */
+        @page {
+            size: A4;
+            margin-top: 2.5cm;
+            margin-bottom: 2.5cm;
+            margin-left: 3cm;
+            margin-right: 2.5cm;
+        }
+        
+        body {
+            font-family: "宋体", SimSun, serif;
+            font-size: 10.5pt; /* 五号 */
+            line-height: 1.25;
+            margin: 0;
+            padding: 0;
+            width: 210mm;
+            margin: 0 auto;
+            background: white;
+            color: black;
+        }
+        
+        /* 报告标题 - 3号黑体，居中 */
+        .report-title {
+            font-family: "黑体", SimHei, sans-serif;
+            font-size: 16pt; /* 3号 */
+            text-align: center;
+            font-weight: bold;
+            margin-top: 2cm;
+            margin-bottom: 1cm;
+        }
+        
+        /* 学校名、学生姓名 - 小四号仿宋体，居中 */
+        .student-info {
+            font-family: "仿宋", FangSong, serif;
+            font-size: 12pt; /* 小四号 */
+            text-align: center;
+            margin-bottom: 0.3cm;
+        }
+        
+        /* 指导教师 - 另起一行，小四号仿宋体，居中 */
+        .teacher-info {
+            font-family: "仿宋", FangSong, serif;
+            font-size: 12pt; /* 小四号 */
+            text-align: center;
+            margin-bottom: 2cm;
+        }
+        
+        /* 摘要 - 五号楷体，不超过120字 */
+        .abstract-section {
+            font-family: "楷体", KaiTi, serif;
+            font-size: 10.5pt; /* 五号 */
+            text-indent: 2em;
+            margin-bottom: 0.5cm;
+            text-align: justify;
+        }
+        
+        .abstract-label {
+            font-weight: bold;
+        }
+        
+        /* 关键词 - 3-5个，分号隔开，五号楷体 */
+        .keywords-section {
+            font-family: "楷体", KaiTi, serif;
+            font-size: 10.5pt; /* 五号 */
+            text-indent: 2em;
+            margin-bottom: 1.5cm;
+        }
+        
+        .keywords-label {
+            font-weight: bold;
+        }
+        
+        /* 一级标题 - 四号楷体 */
+        h1 {
+            font-family: "楷体", KaiTi, serif;
+            font-size: 14pt; /* 四号 */
+            font-weight: normal;
+            margin-top: 0.8cm;
+            margin-bottom: 0.5cm;
+        }
+        
+        /* 二级标题 - 小四号黑体 */
+        h2 {
+            font-family: "黑体", SimHei, sans-serif;
+            font-size: 12pt; /* 小四号 */
+            font-weight: normal;
+            margin-top: 0.6cm;
+            margin-bottom: 0.4cm;
+        }
+        
+        /* 三级标题 - 五号宋体，加黑 */
+        h3 {
+            font-family: "宋体", SimSun, serif;
+            font-size: 10.5pt; /* 五号 */
+            font-weight: bold;
+            margin-top: 0.5cm;
+            margin-bottom: 0.3cm;
+        }
+        
+        /* 正文文字 - 五号宋体 */
+        p {
+            font-family: "宋体", SimSun, serif;
+            font-size: 10.5pt; /* 五号 */
+            text-indent: 2em;
+            text-align: justify;
+            margin-top: 0;
+            margin-bottom: 0;
+            line-height: 1.25;
+        }
+        
+        /* 数学公式 */
+        .formula {
+            font-family: "Times New Roman", serif;
+            font-style: italic;
+            text-indent: 4em;
+            margin: 0.3cm 0;
+            text-align: center;
+        }
+        
+        /* 代码块 */
+        .code-block {
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 9pt;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 0.3cm;
+            margin: 0.5cm 0;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+        
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.5cm 0;
+            font-size: 10.5pt;
+        }
+        
+        table th, table td {
+            border: 1px solid black;
+            padding: 0.2cm;
+            text-align: center;
+            font-family: "宋体", SimSun, serif;
+        }
+        
+        table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        
+        /* 图片样式 */
+        .figure {
+            text-align: center;
+            margin: 0.5cm 0;
+        }
+        
+        .figure img {
+            max-width: 90%;
+            height: auto;
+            border: 1px solid #ddd;
+        }
+        
+        .figure-caption {
+            font-size: 10.5pt;
+            margin-top: 0.2cm;
+            text-align: center;
+        }
+        
+        /* 列表样式 */
+        ul, ol {
+            margin-left: 2em;
+            padding-left: 0;
+        }
+        
+        li {
+            font-family: "宋体", SimSun, serif;
+            font-size: 10.5pt;
+            line-height: 1.25;
+            margin-bottom: 0.2cm;
+        }
+        
+        /* 强调文本 */
+        strong {
+            font-weight: bold;
+        }
+        
+        /* 参考文献 */
+        .references {
+            margin-top: 1cm;
+        }
+        
+        .references p {
+            text-indent: 0;
+            margin-bottom: 0.2cm;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 报告标题 -->
+<div class="report-title">遗传算法原理与应用实验报告</div>
+
+<!-- 学生信息 -->
+<div class="student-info">XX大学 计算机科学与技术学院</div>
+<div class="student-info">学生姓名：XXX  学号：XXXXXXXX</div>
+
+<!-- 指导教师信息 -->
+<div class="teacher-info">指导教师：XXX 教授</div>
+
+<!-- 摘要 -->
+<div class="abstract-section">
+    <span class="abstract-label">摘 要：</span>
+    本文系统阐述了遗传算法的基本原理、算法流程及其在函数优化问题中的应用。通过Python实现了完整的遗传算法程序，并对目标函数y=x²+10·cos(2πx)+10进行了最大化求解。实验对比了不同种群数量、交叉率和变异率参数对算法性能的影响，验证了遗传算法在全局优化问题中的有效性和鲁棒性。结果表明，合理设置遗传算法参数能够有效提升搜索效率和求解精度。
+</div>
+
+<!-- 关键词 -->
+<div class="keywords-section">
+    <span class="keywords-label">关键词：</span>
+    遗传算法；函数优化；参数调优；进化计算；人工智能
+</div>
+
+<!-- 一、遗传算法原理 -->
+<h1>一、遗传算法原理</h1>
+
+<h2>1.1 基本概念</h2>
+<p>
+遗传算法（Genetic Algorithm，GA）是由美国Michigan大学的Holland教授于1975年首次提出的一种模拟自然选择和遗传学机制的搜索算法。该算法借鉴了达尔文的生物进化论和孟德尔的遗传定律，通过模拟自然界中"优胜劣汰、适者生存"的进化过程来搜索问题的最优解。
+</p>
+<p>
+遗传算法的核心思想是将问题的潜在解编码为染色体（通常为二进制串或实数向量），通过选择、交叉和变异等遗传操作，使种群不断进化，最终收敛到最优解或近似最优解。
+</p>
+
+<h2>1.2 生物学基础</h2>
+<p>
+遗传算法的理论基础来源于生物学中的两个重要概念：
+</p>
+<p>
+<strong>（1）达尔文进化论：</strong>生物通过自然选择实现进化，适应环境的个体更容易生存和繁衍后代，不适应环境的个体则被淘汰。这一"适者生存"的原则被应用于算法中的适应度评价和选择操作。
+</p>
+<p>
+<strong>（2）孟德尔遗传定律：</strong>生物的特征由基因决定，基因通过交叉和变异产生新的基因组合。这一原理被应用于算法中的交叉和变异操作，以增加种群的多样性。
+</p>
+
+<h2>1.3 核心术语</h2>
+<p>
+<strong>（1）染色体（Chromosome）：</strong>问题的一个潜在解的编码表示，通常用二进制串或实数向量表示。
+</p>
+<p>
+<strong>（2）基因（Gene）：</strong>染色体中的一个位点，代表解的一个组成部分。
+</p>
+<p>
+<strong>（3）个体（Individual）：</strong>染色体所对应的实际解，通过解码染色体获得。
+</p>
+<p>
+<strong>（4）种群（Population）：</strong>多个个体组成的集合，代表算法在某一代的所有潜在解。
+</p>
+<p>
+<strong>（5）适应度（Fitness）：</strong>衡量个体优劣的指标，适应度越高表示个体越优秀。
+</p>
+<p>
+<strong>（6）选择（Selection）：</strong>根据适应度从当前种群中选择优良个体参与繁殖的过程。
+</p>
+<p>
+<strong>（7）交叉（Crossover）：</strong>两个个体交换部分基因，产生新个体的操作。
+</p>
+<p>
+<strong>（8）变异（Mutation）：</strong>个体基因位发生随机改变的操作，用于维持种群多样性。
+</p>
+
+<h2>1.4 数学模型</h2>
+<p>
+遗传算法可以形式化地描述为一个七元组：
+</p>
+<p class="formula">
+GA = (C, E, P₀, M, Φ, Γ, T)
+</p>
+<p>
+其中：
+</p>
+<p>
+<strong>C</strong> 为个体的编码方法；<strong>E</strong> 为个体的适应度评价函数；<strong>P₀</strong> 为初始种群；<strong>M</strong> 为种群大小；<strong>Φ</strong> 为选择算子；<strong>Γ</strong> 为遗传算子（交叉和变异）；<strong>T</strong> 为算法的终止条件。
+</p>
+
+<!-- 二、算法流程 -->
+<h1>二、算法流程</h1>
+
+<h2>2.1 算法步骤</h2>
+<p>
+标准遗传算法的执行流程如下：
+</p>
+<p>
+<strong>步骤1：初始化种群</strong>
+</p>
+<p>
+随机生成M个个体组成初始种群P₀。对于二进制编码，每个个体的每个基因位随机取0或1；对于实数编码，每个个体在搜索空间内随机生成。
+</p>
+<p>
+<strong>步骤2：适应度评估</strong>
+</p>
+<p>
+计算种群中每个个体的适应度值。对于最大化问题，直接使用目标函数值作为适应度；对于最小化问题，需要将目标函数值转换为适应度值。
+</p>
+<p>
+<strong>步骤3：选择操作</strong>
+</p>
+<p>
+根据个体的适应度进行选择，常用的选择方法包括：
+</p>
+<ul>
+<li><strong>轮盘赌选择：</strong>个体被选中的概率与其适应度成正比。</li>
+<li><strong>锦标赛选择：</strong>随机选择k个个体，选出其中适应度最高的个体。</li>
+<li><strong>排名选择：</strong>根据适应度排名，按排名分配选择概率。</li>
+</ul>
+<p>
+<strong>步骤4：交叉操作</strong>
+</p>
+<p>
+对选中的个体对以概率P<sub>c</sub>进行交叉，常用的交叉方法包括：
+</p>
+<ul>
+<li><strong>单点交叉：</strong>随机选择一个交叉点，交换两个个体在该点之后的基因。</li>
+<li><strong>多点交叉：</strong>随机选择多个交叉点进行基因交换。</li>
+<li><strong>均匀交叉：</strong>每个基因位以一定概率从两个亲本中选择。</li>
+</ul>
+<p>
+<strong>步骤5：变异操作</strong>
+</p>
+<p>
+对交叉后的个体以概率P<sub>m</sub>进行变异，常用的变异方法包括：
+</p>
+<ul>
+<li><strong>位点变异：</strong>二进制编码中随机翻转某些基因位（0变1，1变0）。</li>
+<li><strong>高斯变异：</strong>实数编码中给基因值加上高斯随机扰动。</li>
+</ul>
+<p>
+<strong>步骤6：生成新种群</strong>
+</p>
+<p>
+将经过选择、交叉和变异操作产生的新个体组成新一代种群。
+</p>
+<p>
+<strong>步骤7：终止判断</strong>
+</p>
+<p>
+检查是否满足终止条件（如达到最大迭代次数或找到满意解）。若满足则输出最优解；否则返回步骤2继续迭代。
+</p>
+
+<h2>2.2 算法伪代码</h2>
+<div class="code-block">
+Algorithm: Genetic Algorithm<br>
+Input: population_size, chromosome_length, crossover_rate, mutation_rate, max_generations<br>
+Output: best_solution, best_fitness<br><br>
+1. Initialize population P randomly<br>
+2. Evaluate fitness for each individual in P<br>
+3. For generation = 1 to max_generations do<br>
+4. &nbsp;&nbsp;&nbsp;Select parents from P using selection operator<br>
+5. &nbsp;&nbsp;&nbsp;Apply crossover to parents with probability P_c<br>
+6. &nbsp;&nbsp;&nbsp;Apply mutation to offspring with probability P_m<br>
+7. &nbsp;&nbsp;&nbsp;Form new population P from offspring<br>
+8. &nbsp;&nbsp;&nbsp;Evaluate fitness for each individual in P<br>
+9. &nbsp;&nbsp;&nbsp;Record best individual<br>
+10. &nbsp;&nbsp;If termination condition met then<br>
+11. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Return best individual<br>
+12. &nbsp;&nbsp;End If<br>
+13. End For
+</div>
+
+<h2>2.3 算法流程图</h2>
+<div class="figure">
+    <p style="text-align: center; font-size: 10.5pt;">
+    <strong>开始</strong> → <strong>初始化种群</strong> → <strong>计算适应度</strong> → <strong>满足终止条件？</strong><br>
+    ↓否&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓是<br>
+    <strong>选择操作</strong> → <strong>交叉操作</strong> → <strong>变异操作</strong> → <strong>输出最优解 → 结束</strong>
+    </p>
+</div>
+
+<!-- 三、优缺点分析 -->
+<h1>三、遗传算法的优缺点</h1>
+
+<h2>3.1 优点</h2>
+<p>
+<strong>（1）全局搜索能力强</strong>
+</p>
+<p>
+遗传算法通过种群并行搜索，能够在解空间的不同区域同时进行搜索，避免了传统优化算法容易陷入局部最优的问题。变异操作进一步增强了算法跳出局部最优的能力。
+</p>
+<p>
+<strong>（2）不依赖梯度信息</strong>
+</p>
+<p>
+遗传算法仅需要目标函数值，不需要目标函数的导数信息，因此可以处理不可导、不连续、多峰等复杂函数优化问题。这使得遗传算法适用于传统优化方法难以解决的问题。
+</p>
+<p>
+<strong>（3）并行性强</strong>
+</p>
+<p>
+种群中多个个体的适应度评估和遗传操作可以并行执行，非常适合在多核处理器或分布式计算环境中运行，大大提高了计算效率。
+</p>
+<p>
+<strong>（4）通用性强</strong>
+</p>
+<p>
+遗传算法不依赖于问题的具体特性，只需要定义编码方式和适应度函数即可应用于各类优化问题，具有很强的通用性和灵活性。
+</p>
+<p>
+<strong>（5）鲁棒性好</strong>
+</p>
+<p>
+遗传算法对噪声和不精确数据具有较强的容忍度，即使在适应度评估存在误差的情况下，仍然能够有效地搜索最优解。
+</p>
+
+<h2>3.2 缺点</h2>
+<p>
+<strong>（1）计算开销大</strong>
+</p>
+<p>
+遗传算法需要对种群中所有个体进行适应度评估，且通常需要多代迭代才能收敛，计算量较大。对于适应度函数计算复杂的问题，可能需要很长的运行时间。
+</p>
+<p>
+<strong>（2）参数设置困难</strong>
+</p>
+<p>
+遗传算法的性能高度依赖于参数设置，包括种群大小、交叉率、变异率等。不同问题需要不同的参数配置，而参数的最优值通常需要通过大量实验来确定。
+</p>
+<p>
+<strong>（3）收敛速度慢</strong>
+</p>
+<p>
+在接近最优解时，遗传算法的收敛速度通常较慢，需要进行精细调整才能达到高精度解。这使得遗传算法在需要高精度的应用中存在局限。
+</p>
+<p>
+<strong>（4）早熟收敛</strong>
+</p>
+<p>
+当种群多样性降低时，算法可能过早收敛到局部最优解。特别是当交叉率和变异率设置不当时，容易出现早熟收敛现象。
+</p>
+<p>
+<strong>（5）理论分析困难</strong>
+</p>
+<p>
+由于遗传算法的随机性和复杂性，其收敛性和收敛速度的理论分析较为困难，缺乏严格的数学证明。
+</p>
+
+<h2>3.3 改进策略</h2>
+<p>
+针对遗传算法的缺点，研究者提出了多种改进策略：
+</p>
+<p>
+<strong>（1）自适应参数调整：</strong>根据算法运行状态动态调整交叉率和变异率，避免参数设置不当导致的问题。
+</p>
+<p>
+<strong>（2）精英保留策略：</strong>在每一代中保留最优个体不参与遗传操作，确保优良基因不丢失。
+</p>
+<p>
+<strong>（3）混合算法：</strong>将遗传算法与局部搜索算法（如梯度下降法、模拟退火算法）结合，发挥各自优势。
+</p>
+<p>
+<strong>（4）多种群策略：</strong>维护多个子种群，通过迁移操作交换信息，保持种群多样性。
+</p>
+
+<!-- 四、应用实例 -->
+<h1>四、应用实例</h1>
+
+<h2>4.1 问题描述</h2>
+<p>
+本实验使用遗传算法求解以下函数的最大值：
+</p>
+<p class="formula">
+f(x) = x² + 10·cos(2πx) + 10
+</p>
+<p>
+该函数是一个典型的多峰函数，在区间[-10, 10]内存在多个局部极值点。由于x²项的主导作用，函数值随|x|增大而增大，全局最大值出现在边界处。
+</p>
+<p>
+理论分析：
+</p>
+<p class="formula">
+当x=±10时，f(±10) = 100 + 10·cos(20π) + 10 = 100 + 10 + 10 = 120
+</p>
+<p>
+因此，该函数在搜索范围[-10, 10]内的全局最大值为120，最优点为x=±10。
+</p>
+
+<h2>4.2 算法实现</h2>
+<p>
+<strong>（1）编码方式</strong>
+</p>
+<p>
+采用二进制编码，染色体长度为20位，将搜索区间[-10, 10]映射到[0, 2²⁰-1]，精度为：
+</p>
+<p class="formula">
+Δx = (10 - (-10)) / (2²⁰ - 1) ≈ 0.00001907
+</p>
+<p>
+<strong>（2）适应度函数</strong>
+</p>
+<p>
+由于是最大化问题，直接使用目标函数值作为适应度：
+</p>
+<p class="formula">
+Fitness(x) = f(x) = x² + 10·cos(2πx) + 10
+</p>
+<p>
+当x=±10时，适应度最大值为120。
+</p>
+<p>
+<strong>（3）参数设置</strong>
+</p>
+<p>
+标准配置参数如下表所示：
+</p>
+<table>
+    <tr>
+        <th>参数</th>
+        <th>符号</th>
+        <th>取值</th>
+    </tr>
+    <tr>
+        <td>种群大小</td>
+        <td>M</td>
+        <td>50</td>
+    </tr>
+    <tr>
+        <td>染色体长度</td>
+        <td>L</td>
+        <td>20</td>
+    </tr>
+    <tr>
+        <td>交叉率</td>
+        <td>P<sub>c</sub></td>
+        <td>0.8</td>
+    </tr>
+    <tr>
+        <td>变异率</td>
+        <td>P<sub>m</sub></td>
+        <td>0.01</td>
+    </tr>
+    <tr>
+        <td>最大迭代次数</td>
+        <td>T</td>
+        <td>100</td>
+    </tr>
+    <tr>
+        <td>搜索范围</td>
+        <td>[x_min, x_max]</td>
+        <td>[-10, 10]</td>
+    </tr>
+</table>
+
+<h2>4.3 实验结果</h2>
+<p>
+<strong>（1）标准配置运行结果</strong>
+</p>
+<p>
+使用标准配置（种群大小50，交叉率0.8，变异率0.01）运行遗传算法，经过100代迭代，算法能够有效收敛到接近理论最优值的解，找到了接近x=±10的最优点，函数值接近120。
+</p>
+<div class="figure">
+    <img src="ga_optimization_result.png" alt="遗传算法优化结果">
+    <div class="figure-caption">图1 标准配置 - 遗传算法优化结果</div>
+</div>
+<div class="figure">
+    <img src="终端运行结果1.png" alt="标准配置运行结果">
+    <div class="figure-caption">图2 标准配置运行结果</div>
+</div>
+<p>
+<strong>（2）参数对比实验</strong>
+</p>
+<div class="figure">
+    <img src="终端运行结果2.png" alt="参数对比实验">
+    <div class="figure-caption">图3 参数对比实验</div>
+</div>
+<div class="figure">
+    <img src="终端运行结果3.png" alt="小种群和大种群实验">
+    <div class="figure-caption">图4 小种群和大种群实验结果</div>
+</div>
+<div class="figure">
+    <img src="终端运行结果4.png" alt="交叉率实验">
+    <div class="figure-caption">图5 交叉率实验结果</div>
+</div>
+<div class="figure">
+    <img src="终端运行结果5.png" alt="变异率实验">
+    <div class="figure-caption">图6 变异率实验结果</div>
+</div>
+<div class="figure">
+    <img src="终端运行结果6.png" alt="参数对比总结">
+    <div class="figure-caption">图7 参数对比总结</div>
+</div>
+<p>
+为研究不同参数对算法性能的影响，进行了7组对比实验，结果如下表所示：
+</p>
+<div class="figure">
+    <img src="ga_parameter_comparison.png" alt="遗传算法参数对比分析">
+    <div class="figure-caption">图8 遗传算法参数对比分析</div>
+</div>
+<table>
+    <tr>
+        <th>配置名称</th>
+        <th>种群数</th>
+        <th>交叉率</th>
+        <th>变异率</th>
+        <th>最优x</th>
+        <th>最优y</th>
+        <th>耗时(s)</th>
+    </tr>
+    <tr>
+        <td>标准配置</td>
+        <td>50</td>
+        <td>0.80</td>
+        <td>0.010</td>
+        <td>≈±10</td>
+        <td>≈120</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>小种群</td>
+        <td>20</td>
+        <td>0.80</td>
+        <td>0.010</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>大种群</td>
+        <td>100</td>
+        <td>0.80</td>
+        <td>0.010</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>低交叉率</td>
+        <td>50</td>
+        <td>0.40</td>
+        <td>0.010</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>高交叉率</td>
+        <td>50</td>
+        <td>0.95</td>
+        <td>0.010</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>低变异率</td>
+        <td>50</td>
+        <td>0.80</td>
+        <td>0.001</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>高变异率</td>
+        <td>50</td>
+        <td>0.80</td>
+        <td>0.050</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+    </tr>
+</table>
+
+<h2>4.4 结果分析</h2>
+<p>
+<strong>（1）种群数量的影响</strong>
+</p>
+<p>
+小种群（20个个体）容易导致种群多样性不足，增加陷入局部最优的风险，但计算速度快。标准种群（50个个体）在搜索质量和计算效率之间取得了较好的平衡。大种群（100个个体）能够提供更丰富的多样性，搜索结果更稳定，但计算时间显著增加。
+</p>
+<p>
+<strong>（2）交叉率的影响</strong>
+</p>
+<p>
+低交叉率（0.4）会减慢基因重组的速度，导致搜索进程缓慢，需要更多代数才能收敛。标准交叉率（0.8）和高交叉率（0.95）都能有效地促进优良基因的组合。过高的交叉率（>0.95）可能破坏已经形成的优良基因组合，反而不利于收敛。
+</p>
+<p>
+<strong>（3）变异率的影响</strong>
+</p>
+<p>
+低变异率（0.001）会导致种群多样性快速丧失，增加早熟收敛的风险，特别是在搜索后期难以跳出局部最优。标准变异率（0.01）能够在保持种群多样性和不破坏优良基因之间取得平衡。高变异率（0.05）虽然能维持较高的多样性，但过度的随机性会干扰算法的收敛过程。
+</p>
+
+<h2>4.5 实验结论</h2>
+<p>
+通过本实验可以得出以下结论：
+</p>
+<p>
+<strong>（1）</strong>遗传算法能够有效求解多峰函数的全局最优问题，在合理参数设置下可以找到接近理论最优的解。
+</p>
+<p>
+<strong>（2）</strong>种群大小对算法性能影响显著，过小的种群容易陷入局部最优，建议种群大小不低于50。
+</p>
+<p>
+<strong>（3）</strong>交叉率和变异率需要根据具体问题进行调整，推荐的参数范围为：交叉率0.7-0.95，变异率0.01-0.05。
+</p>
+<p>
+<strong>（4）</strong>遗传算法具有较好的鲁棒性，在不同参数配置下都能找到较好的解，但需要避免极端参数设置。
+</p>
+<p>
+<strong>（5）</strong>对于边界主导的优化问题，需要确保搜索范围足够大以覆盖最优解区域。
+</p>
+
+<!-- 五、结论 -->
+<h1>五、结论</h1>
+<p>
+本文系统阐述了遗传算法的基本原理和算法流程，分析了其优缺点，并通过函数优化实例验证了遗传算法的有效性。实验结果表明：
+</p>
+<p>
+<strong>（1）</strong>遗传算法通过模拟自然进化过程，能够有效地在全局范围内搜索最优解，特别适合处理复杂的多峰函数优化问题。
+</p>
+<p>
+<strong>（2）</strong>算法性能高度依赖于参数设置，需要通过实验或自适应方法确定最佳参数配置。本实验推荐的参数范围为：种群大小50-100，交叉率0.7-0.95，变异率0.01-0.05。
+</p>
+<p>
+<strong>（3）</strong>遗传算法具有通用性强、不依赖梯度信息、并行性好等优点，但也存在计算开销大、收敛速度慢、参数设置困难等缺点。通过引入精英保留、自适应参数调整、混合算法等改进策略，可以显著提升算法性能。
+</p>
+<p>
+<strong>（4）</strong>在实际应用中，建议结合问题特性选择合适的编码方式和遗传算子，并通过多次实验确定最佳参数配置，以获得满意的优化效果。
+</p>
+
+<!-- 参考文献 -->
+<div class="references">
+<h1>参考文献</h1>
+<p>
+[1] Holland J H. Adaptation in Natural and Artificial Systems[M]. Ann Arbor: University of Michigan Press, 1975.
+</p>
+<p>
+[2] Goldberg D E. Genetic Algorithms in Search, Optimization and Machine Learning[M]. Reading: Addison-Wesley, 1989.
+</p>
+<p>
+[3] 陈国良, 王熙法, 庄镇泉, 等. 遗传算法及其应用[M]. 北京: 人民邮电出版社, 1996.
+</p>
+<p>
+[4] 周明, 孙树栋. 遗传算法原理及应用[M]. 北京: 国防工业出版社, 1999.
+</p>
+<p>
+[5] Mitchell M. An Introduction to Genetic Algorithms[M]. Cambridge: MIT Press, 1998.
+</p>
+</div>
+
+</body>
+</html>

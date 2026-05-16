@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模拟退火算法实验报告</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SimSun&display=swap');
+
+        body {
+            font-family: "SimSun", "Times New Roman", serif;
+            font-size: 10.5pt;
+            line-height: 1.25;
+            margin: 2.5cm 2.5cm 2.5cm 3cm;
+            text-align: justify;
+        }
+
+        .title {
+            font-size: 16pt;
+            font-weight: bold;
+            text-align: center;
+            font-family: "SimHei", "黑体", sans-serif;
+            margin-bottom: 24pt;
+        }
+
+        .author-info {
+            font-size: 12pt;
+            text-align: center;
+            font-family: "SimSun", "仿宋", serif;
+            margin-bottom: 6pt;
+        }
+
+        .instructor {
+            font-size: 12pt;
+            text-align: center;
+            font-family: "SimSun", "仿宋", serif;
+            margin-bottom: 24pt;
+        }
+
+        .abstract-title, .keywords-title {
+            font-size: 10.5pt;
+            font-weight: bold;
+            font-family: "KaiTi", "楷体", serif;
+        }
+
+        .abstract, .keywords {
+            font-size: 10.5pt;
+            font-family: "KaiTi", "楷体", serif;
+            margin-bottom: 18pt;
+        }
+
+        .h1 {
+            font-size: 14pt;
+            font-weight: bold;
+            font-family: "KaiTi", "楷体", serif;
+            margin-top: 18pt;
+            margin-bottom: 12pt;
+        }
+
+        .h2 {
+            font-size: 12pt;
+            font-weight: bold;
+            font-family: "SimHei", "黑体", sans-serif;
+            margin-top: 12pt;
+            margin-bottom: 9pt;
+        }
+
+        .h3 {
+            font-size: 10.5pt;
+            font-weight: bold;
+            font-family: "SimSun", "宋体", serif;
+            margin-top: 9pt;
+            margin-bottom: 6pt;
+        }
+
+        p {
+            text-indent: 2em;
+            margin-top: 0;
+            margin-bottom: 6pt;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        ul, ol {
+            margin-left: 2em;
+        }
+
+        li {
+            margin-bottom: 6pt;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title">模拟退火算法优化实验报告</div>
+
+    <div class="author-info">学校：某某大学 &nbsp;&nbsp;&nbsp;&nbsp; 姓名：张三</div>
+    <div class="instructor">指导教师：李教授 &nbsp;&nbsp; 职称：副教授</div>
+
+    <p class="abstract-title"><strong>摘&nbsp;&nbsp;要</strong></p>
+    <p class="abstract">本报告介绍了模拟退火算法的基本原理与实现方法。该算法源于固体退火过程，通过引入温度参数和概率接受机制，能够有效避免陷入局部最优解，成功应用于函数优化问题。实验表明，调整初始温度、冷却率和马尔科夫链长度等参数可显著影响算法性能。</p>
+
+    <p class="keywords-title"><strong>关键词：</strong></p>
+    <p class="keywords">模拟退火算法；全局优化； Metropolis准则；马尔科夫链；函数优化</p>
+
+    <h1 class="h1">一、引言</h1>
+    <p>在工程实践和科学研究中，优化问题无处不在。传统的梯度下降法虽然收敛速度快，但容易陷入局部最优解，难以获得全局最优解。模拟退火算法（Simulated Annealing，SA）作为一种全局优化算法，通过模拟固体退火过程，能够在解空间中有效跳出局部最优，寻找全局最优解或近似全局最优解。</p>
+    <p>本报告基于目标函数 f(x) = x + 10sin(3x) + cos(x) 在区间 [0, 9] 上的最小值搜索问题，详细阐述模拟退火算法的原理、流程、参数影响及其应用。</p>
+
+    <h1 class="h1">二、模拟退火算法原理</h1>
+
+    <h2 class="h2">（一）算法起源</h2>
+    <p>模拟退火算法最早由Kirkpatrick等人于1983年提出，其核心思想来源于金属退火过程。当金属被加热至高温后，其内部粒子处于高速无序状态；随后缓慢降温，粒子逐渐趋于有序，最终在常温下达到能量最低的稳定状态。模拟退火算法正是将这一物理过程抽象为数学优化方法。</p>
+
+    <h2 class="h2">（二）Metropolis准则</h2>
+    <p>Metropolis准则 是模拟退火算法的核心接受准则。在某一温度 T 下，假设当前解为 x，对应的目标函数值为 E(x)。通过扰动产生新解 x'，目标函数值为 E(x')。则接受新解的概率为：</p>
+    <p class="center"><strong>P = min(1, exp(-(E(x') - E(x)) / kT))</strong></p>
+    <p>其中，k 为玻尔兹曼常数。当 E(x') < E(x) 时，新解被无条件接受；当 E(x') ≥ E(x) 时，以概率 exp(-ΔE/T) 接受新解。这种机制使得算法在高温下能够概率性地接受较差的解，从而跳出局部最优。</p>
+
+    <h2 class="h2">（三）温度更新机制</h2>
+    <p>温度的缓慢下降是模拟退火算法收敛到全局最优解的关键。常用的温度更新策略包括：</p>
+    <p>（1）线性降温：T<sub>k+1</sub> = T<sub>k</sub> - α，其中 α 为常数；</p>
+    <p>（2）比例降温：T<sub>k+1</sub> = λ × T<sub>k</sub>，其中 λ ∈ (0, 1) 为冷却率；</p>
+    <p>（3）对数降温：T<sub>k</sub> = c / log(k + 1)，其中 c 为常数。</p>
+    <p>本实验采用比例降温策略，因其实现简单且效果良好。</p>
+
+    <h1 class="h1">三、算法流程</h1>
+
+    <h2 class="h2">（一）算法步骤</h2>
+    <p>模拟退火算法的基本流程如下：</p>
+    <p>Step 1：初始化。设定初始温度 T、冷却率 α、最小温度 T<sub>min</sub>、马尔科夫链长度 L，随机产生初始解 x。</p>
+    <p>Step 2：在当前温度 T 下，循环执行以下操作 L 次（马尔科夫链）：</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;（1）产生新解 x' = x + Δx，其中 Δx 为邻域扰动；</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;（2）计算目标函数差值 ΔE = f(x') - f(x)；</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;（3）若 ΔE < 0，则接受新解 x = x'；否则以概率 exp(-ΔE/T) 接受新解；</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;（4）更新最优解。</p>
+    <p>Step 3：按照 T = α × T 更新温度。</p>
+    <p>Step 4：若 T > T<sub>min</sub> 且未达到最大迭代次数，则转向 Step 2；否则输出最优解。</p>
+
+    <h2 class="h2">（二）算法流程图</h2>
+    <p class="center">[开始] → [初始化参数] → [产生初始解] → [温度 T > T_min?] → [否] → [输出最优解] → [结束]</p>
+    <p class="center">&nbsp;&nbsp;&nbsp;&nbsp;↓ 是</p>
+    <p class="center">&nbsp;&nbsp;&nbsp;&nbsp;[马尔科夫链搜索 L 次]</p>
+    <p class="center">&nbsp;&nbsp;&nbsp;&nbsp;↓</p>
+    <p class="center">&nbsp;&nbsp;&nbsp;&nbsp;[产生新解，计算 ΔE]</p>
+    <p class="center">&nbsp;&nbsp;&nbsp;&nbsp;↓</p>
+    <p class="center">&nbsp;&nbsp;&nbsp;&nbsp;[ΔE < 0 或 exp(-ΔE/T) > rand?] → [是] → [接受新解]</p>
+    <p class="center">&nbsp;&nbsp;&nbsp;&nbsp;↓ 否</p>
+    <p class="center">&nbsp;&nbsp;&nbsp;&nbsp;[拒绝新解，保留原解]</p>
+    <p class="center">&nbsp;&nbsp;&nbsp;&nbsp;↓</p>
+    <p class="center">&nbsp;&nbsp;&nbsp;&nbsp;[更新最优解] → [降温 T = α×T] → [返回温度判断]</p>
+
+    <h2 class="h2">（三）本实验参数设置</h2>
+    <p>本实验针对目标函数 f(x) = x + 10sin(3x) + cos(x) 进行优化，具体参数设置如下表所示：</p>
+    <p class="center">表1 实验参数设置</p>
+    <table border="1" cellpadding="5" style="border-collapse: collapse; width: 80%; margin: 0 auto; text-align: center;">
+        <tr>
+            <td>参数名称</td>
+            <td>符号</td>
+            <td>取值</td>
+            <td>说明</td>
+        </tr>
+        <tr>
+            <td>初始温度</td>
+            <td>T₀</td>
+            <td>5000</td>
+            <td>高温利于跳出局部最优</td>
+        </tr>
+        <tr>
+            <td>冷却率</td>
+            <td>α</td>
+            <td>0.99</td>
+            <td>缓慢降温，搜索精细</td>
+        </tr>
+        <tr>
+            <td>最小温度</td>
+            <td>T<sub>min</td>
+            <td>10⁻¹⁰</td>
+            <td>终止条件</td>
+        </tr>
+        <tr>
+            <td>马尔科夫链长度</td>
+            <td>L</td>
+            <td>10</td>
+            <td>每温度下搜索次数</td>
+        </tr>
+        <tr>
+            <td>最大迭代次数</td>
+            <td>K</td>
+            <td>5000</td>
+            <td>防止无限循环</td>
+        </tr>
+    </table>
+
+    <h1 class="h1">四、参数对算法性能的影响</h1>
+
+    <h2 class="h2">（一）初始温度的影响</h2>
+    <p>初始温度 T₀ 决定了算法初期的全局搜索能力：</p>
+    <p>（1）较高的初始温度（如 5000~10000）：高温下算法能以较大概率接受较差的解，有效跳出局部最优陷阱，但会增加搜索时间；</p>
+    <p>（2）较低的初始温度（如 100~500）：搜索速度快，但可能过早收敛至局部最优解；</p>
+    <p>（3）推荐范围为 1000~10000，本实验选择 5000。</p>
+
+    <h2 class="h2">（二）马尔科夫链长度的影响</h2>
+    <p>马尔科夫链长度 L 表示每个温度下进行的搜索次数：</p>
+    <p>（1）较长的链（如 30~50）：在每个温度下进行更充分的邻域搜索，能更精细地探索解空间，但耗时显著增加；</p>
+    <p>（2）较短的链（如 5~10）：搜索速度快，但可能错过更优的邻域解；</p>
+    <p>（3）推荐范围为 10~50，本实验选择 10。</p>
+
+    <h2 class="h2">（三）冷却率的影响</h2>
+    <p>冷却率 α 控制温度下降的速度：</p>
+    <p>（1）较慢的冷却（如 α = 0.99）：温度下降缓慢，搜索精细，能更好地逼近全局最优，但计算时间较长；</p>
+    <p>（2）较快的冷却（如 α = 0.5~0.8）：温度下降快，搜索速度快，但容易跳过全局最优区域；</p>
+    <p>（3）推荐范围为 0.9~0.999，本实验选择 0.99。</p>
+
+    <h1 class="h1">五、算法优缺点分析</h1>
+
+    <h2 class="h2">（一）算法优点</h2>
+    <p>（1）全局搜索能力强：通过概率接受机制，算法能够跳出局部最优，向全局最优方向搜索；</p>
+    <p>（2）算法框架通用：对目标函数的数学性质（如连续性、可导性）要求不高，适应范围广；</p>
+    <p>（3）参数设置相对灵活：初始温度、冷却率、马尔科夫链长度等参数可根据具体问题调整；</p>
+    <p>（4）易于与其他算法结合：可作为局部搜索算子或与遗传算法、粒子群算法等混合使用。</p>
+
+    <h2 class="h2">（二）算法缺点</h2>
+    <p>（1）收敛速度较慢：为确保收敛到全局最优，需要缓慢降温并接受较差的解，导致搜索时间长；</p>
+    <p>（2）参数敏感：初始温度、冷却率等参数对算法性能影响显著，需要精心调参；</p>
+    <p>（3）近似最优解而非精确解：算法输出的是全局最优解的近似，精度与参数设置和计算时间相关；</p>
+    <p>（4）难以判断收敛性：缺乏有效的收敛判据，通常依靠最大迭代次数或最小温度终止。</p>
+
+    <h1 class="h1">六、应用实例</h1>
+
+    <h2 class="h2">（一）实验结果</h2>
+    <p>本实验针对目标函数 f(x) = x + 10sin(3x) + cos(x) 在区间 [0, 9] 上寻找最小值。使用 Python 实现的模拟退火算法优化结果如下：</p>
+    <p class="center">表2 优化结果</p>
+    <table border="1" cellpadding="5" style="border-collapse: collapse; width: 80%; margin: 0 auto; text-align: center;">
+        <tr>
+            <td>项目</td>
+            <td>数值</td>
+        </tr>
+        <tr>
+            <td>最优解 x</td>
+            <td>1.566358</td>
+        </tr>
+        <tr>
+            <td>最小值 f(x)</td>
+            <td>-8.428317</td>
+        </tr>
+        <tr>
+            <td>理论最优（π/2 ≈ 1.5708）</td>
+            <td>f(π/2) ≈ -8.4292</td>
+        </tr>
+        <tr>
+            <td>迭代次数</td>
+            <td>5000</td>
+        </tr>
+    </table>
+
+    <h2 class="h2">（二）结果分析</h2>
+    <p>实验结果表明，模拟退火算法成功找到了全局最优解附近的结果。最优解 x ≈ 1.566 与理论最优 π/2 ≈ 1.571 非常接近，对应的函数值 f(x) ≈ -8.428 也接近理论最小值 -8.429。这验证了模拟退火算法在函数优化问题中的有效性。</p>
+
+    <h2 class="h2">（三）其他应用领域</h2>
+    <p>模拟退火算法已被广泛应用于各个优化领域：</p>
+    <p>（1）组合优化：TSP旅行商问题、0-1背包问题、Job-Shop调度问题；</p>
+    <p>（2）超参数优化：机器学习模型参数调优、神经网络结构搜索；</p>
+    <p>（3）图像处理：图像分割、边缘检测、参数辨识；</p>
+    <p>（4）工程设计：结构优化、电路设计、资源配置。</p>
+
+    <h1 class="h1">七、结论</h1>
+    <p>本报告详细介绍了模拟退火算法的基本原理、算法流程、参数影响及其应用。实验证明，通过合理设置初始温度、冷却率和马尔科夫链长度等参数，模拟退火算法能够有效避免局部最优，找到全局最优解或近似全局最优解。尽管该算法存在收敛速度较慢的缺点，但其全局搜索能力和广泛的适用性使其成为解决复杂优化问题的重要工具。</p>
+
+    <h1 class="h1">参考文献</h1>
+    <p>[1] Kirkpatrick S, Gelatt C D, Vecchi M P. Optimization by Simulated Annealing[J]. Science, 1983, 220(4599): 671-680.</p>
+    <p>[2] Černý V. Thermodynamical Approach to the Traveling Salesman Problem: An Efficient Simulation Algorithm[J]. Journal of Optimization Theory and Applications, 1985, 45(1): 41-51.</p>
+    <p>[3] 康立山，谢云，罗祖华等. 非数值并行算法——模拟退火算法[M]. 北京：科学出版社，1994.</p>
+
+</body>
+</html>
